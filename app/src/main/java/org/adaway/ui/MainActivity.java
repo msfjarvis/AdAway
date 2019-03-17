@@ -37,7 +37,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.adaway.R;
 import org.adaway.helper.NotificationHelper;
 import org.adaway.helper.ThemeHelper;
-import org.adaway.ui.adware.AdwareFragment;
 import org.adaway.ui.help.HelpActivity;
 import org.adaway.ui.home.HomeFragment;
 import org.adaway.ui.hosts.HostsSourcesFragment;
@@ -295,12 +294,9 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new TcpdumpFragment();
                 break;
             case 5:
-                fragment = new AdwareFragment();
-                break;
-            case 6:
                 fragment = new PrefsFragment();
                 break;
-            case 7:
+            case 6:
                 // Restore drawer selected item
                 this.mDrawerList.setItemChecked(this.mSelectedMenuItem, true);
                 // Start help activity
