@@ -10,3 +10,7 @@ build
 # IntelliJ IDEA
 .idea
 *.iml
+
+# Signing
+keystore.properties
+*.jks
