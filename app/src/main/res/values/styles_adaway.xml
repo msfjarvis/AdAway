@@ -7,8 +7,10 @@
         <item name="colorSecondary">@color/primary</item>
         <item name="colorSecondaryVariant">@color/primaryVariant</item>
         <item name="colorOnSecondary">@color/onPrimary</item>
-        <item name="android:statusBarColor" ns1:targetApi="21">@color/primary</item>
+        <item name="android:statusBarColor" ns1:targetApi="21">?attr/colorSurface</item>
         <item name="preferenceTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="colorOnSurface">@color/onPrimary</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
     </style>
     <style name="Theme.AdAway.Light" parent="Theme.MaterialComponents.Light">
         <item name="colorPrimary">@color/lightPrimary</item>
