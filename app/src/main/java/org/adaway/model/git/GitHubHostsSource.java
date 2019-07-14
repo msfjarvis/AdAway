@@ -56,9 +56,9 @@ class GitHubHostsSource extends GitHostsSource {
             throw new MalformedURLException("The GitHub user content URL " + url + " is not valid.");
         }
         // Extract components from path
-        this.owner = pathParts[1];
-        this.repo = pathParts[2];
-        this.blobPath = Stream.of(pathParts)
+        owner = pathParts[1];
+        repo = pathParts[2];
+        blobPath = Stream.of(pathParts)
                 .skip(4)
                 .collect(Collectors.joining("/"));
     }
@@ -67,7 +67,7 @@ class GitHubHostsSource extends GitHostsSource {
     @Nullable
     public Date getLastUpdate() {
         // Create commit API request URL
-        String commitApiUrl = "https://api.github.com/repos/" + this.owner + "/" + this.repo + "/commits?path=" + this.blobPath;
+        String commitApiUrl = "https://api.github.com/repos/" + owner + "/" + repo + "/commits?path=" + blobPath;
         // Create client and request
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(commitApiUrl).build();
@@ -95,7 +95,7 @@ class GitHubHostsSource extends GitHostsSource {
             JSONObject committerObject = commitObject.getJSONObject("committer");
             String dateString = committerObject.getString("date");
             try {
-                date = this.dateFormat.parse(dateString);
+                date = dateFormat.parse(dateString);
             } catch (ParseException exception) {
                 Log.w(Constants.TAG, "Failed to parse commit date: " + dateString + ".", exception);
             }
