@@ -111,7 +111,7 @@ public class SuperUserSystemlessMode extends AbstractSystemlessMode {
                 }
             }
             // Check if systemless mode is already enabled
-            if (this.isEnabled(context, shell)) {
+            if (isEnabled(context, shell)) {
                 return true;
             }
             // Check if the system hosts file is already bind mounted
@@ -157,7 +157,7 @@ public class SuperUserSystemlessMode extends AbstractSystemlessMode {
             // Start shell
             shell = Shell.startShell();
             // Check if systemless mode is enabled
-            if (!this.isEnabled(context, shell)) {
+            if (!isEnabled(context, shell)) {
                 return true;
             }
             // Get hosts path

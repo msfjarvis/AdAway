@@ -59,10 +59,10 @@ public class HostsInstallSnackbar {
      * @param view The view to bind the snackbar to.
      */
     public HostsInstallSnackbar(@NonNull View view) {
-        this.mView = view;
-        this.update = false;
-        this.skipUpdate = false;
-        this.ignoreEventDuringInstall = false;
+        mView = view;
+        update = false;
+        skipUpdate = false;
+        ignoreEventDuringInstall = false;
     }
 
     /**
@@ -71,7 +71,7 @@ public class HostsInstallSnackbar {
      * @param ignore {@code true} to ignore events, {@code false} otherwise.
      */
     public void setIgnoreEventDuringInstall(boolean ignore) {
-        this.ignoreEventDuringInstall = ignore;
+        ignoreEventDuringInstall = ignore;
     }
 
     /**
@@ -91,11 +91,11 @@ public class HostsInstallSnackbar {
                     return;
                 }
                 // First update
-                if (this.firstUpdate) {
-                    this.firstUpdate = false;
+                if (firstUpdate) {
+                    firstUpdate = false;
                     return;
                 }
-                HostsInstallSnackbar.this.notifyUpdateAvailable();
+                notifyUpdateAvailable();
             }
         };
     }
@@ -105,77 +105,77 @@ public class HostsInstallSnackbar {
      */
     public void notifyUpdateAvailable() {
         // Check if notify snackbar is already displayed
-        if (this.notifySnackbar != null) {
+        if (notifySnackbar != null) {
             return;
         }
         // Check if wait snackbar is displayed
-        if (this.waitSnackbar != null) {
+        if (waitSnackbar != null) {
             // Mark update available
-            this.update = true;
+            update = true;
             return;
         }
         // Check if update event should be skipped
-        if (this.skipUpdate) {
-            this.skipUpdate = false;
+        if (skipUpdate) {
+            skipUpdate = false;
             return;
         }
         // Show notify snackbar
-        this.notifySnackbar = Snackbar.make(this.mView, R.string.notification_configuration_changed, LENGTH_INDEFINITE)
+        notifySnackbar = Snackbar.make(mView, R.string.notification_configuration_changed, LENGTH_INDEFINITE)
                 .setAction(R.string.notification_configuration_changed_action, v -> install());
-        this.notifySnackbar.show();
+        notifySnackbar.show();
         // Mark update as notified
-        this.update = false;
+        update = false;
     }
 
     private void install() {
-        this.showLoading();
+        showLoading();
         AppExecutors.getInstance().diskIO().execute(() -> {
-            AdAwayApplication application = (AdAwayApplication) this.mView.getContext().getApplicationContext();
+            AdAwayApplication application = (AdAwayApplication) mView.getContext().getApplicationContext();
             HostsInstallModel model = application.getHostsInstallModel();
             try {
                 model.retrieveHostsSources();
                 model.applyHostsFile();
-                this.endLoading(true);
+                endLoading(true);
             } catch (HostsInstallException exception) {
-                this.endLoading(false);
+                endLoading(false);
             }
         });
     }
 
     private void showLoading() {
         // Clear notify snackbar
-        if (this.notifySnackbar != null) {
-            this.notifySnackbar.dismiss();
-            this.notifySnackbar = null;
+        if (notifySnackbar != null) {
+            notifySnackbar.dismiss();
+            notifySnackbar = null;
         }
         // Create and show wait snackbar
-        this.waitSnackbar = Snackbar.make(this.mView, R.string.notification_configuration_installing, LENGTH_INDEFINITE);
-        appendViewToSnackbar(this.waitSnackbar, new ProgressBar(this.mView.getContext()));
-        this.waitSnackbar.show();
+        waitSnackbar = Snackbar.make(mView, R.string.notification_configuration_installing, LENGTH_INDEFINITE);
+        appendViewToSnackbar(waitSnackbar, new ProgressBar(mView.getContext()));
+        waitSnackbar.show();
     }
 
     private void endLoading(boolean successfulInstall) {
         // Clear wait snackbar
-        if (this.waitSnackbar != null) {
-            this.waitSnackbar.dismiss();
-            this.waitSnackbar = null;
+        if (waitSnackbar != null) {
+            waitSnackbar.dismiss();
+            waitSnackbar = null;
         }
         // Check install failure
         if (!successfulInstall) {
-            Snackbar failureSnackbar = Snackbar.make(this.mView, R.string.notification_configuration_failed, LENGTH_LONG);
-            ImageView view = new ImageView(this.mView.getContext());
+            Snackbar failureSnackbar = Snackbar.make(mView, R.string.notification_configuration_failed, LENGTH_LONG);
+            ImageView view = new ImageView(mView.getContext());
             view.setImageResource(R.drawable.status_fail);
             appendViewToSnackbar(failureSnackbar, view);
             failureSnackbar.show();
         }
         // Check pending update notification
-        else if (this.update) {
+        else if (update) {
             // Ignore next update event if events should be ignored
-            if (this.ignoreEventDuringInstall) {
-                this.skipUpdate = true;
+            if (ignoreEventDuringInstall) {
+                skipUpdate = true;
             } else {
                 // Otherwise display update notification
-                this.notifyUpdateAvailable();
+                notifyUpdateAvailable();
             }
         }
     }
