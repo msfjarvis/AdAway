@@ -66,7 +66,7 @@ class ListsAdapter extends ListAdapter<HostListItem, ListsAdapter.ViewHolder> {
     public ListsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(
-                this.twoRows ? R.layout.checkbox_list_two_entries : R.layout.checkbox_list_entry,
+                twoRows ? R.layout.checkbox_list_two_entries : R.layout.checkbox_list_entry,
                 parent,
                 false
         );
@@ -75,11 +75,11 @@ class ListsAdapter extends ListAdapter<HostListItem, ListsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        HostListItem item = this.getItem(position);
+        HostListItem item = getItem(position);
         holder.enabledCheckBox.setChecked(item.isEnabled());
         holder.enabledCheckBox.setOnClickListener(view -> viewCallback.toggleItemEnabled(item));
         holder.hostTextView.setText(item.getHost());
-        if (this.twoRows) {
+        if (twoRows) {
             holder.redirectionTextView.setText(item.getRedirection());
         }
         holder.itemView.setOnLongClickListener(view -> viewCallback.startAction(item, holder.itemView));
@@ -102,9 +102,9 @@ class ListsAdapter extends ListAdapter<HostListItem, ListsAdapter.ViewHolder> {
          */
         ViewHolder(View itemView) {
             super(itemView);
-            this.enabledCheckBox = itemView.findViewById(R.id.checkbox_list_checkbox);
-            this.hostTextView = itemView.findViewById(R.id.checkbox_list_text);
-            this.redirectionTextView = itemView.findViewById(R.id.checkbox_list_subtext);
+            enabledCheckBox = itemView.findViewById(R.id.checkbox_list_checkbox);
+            hostTextView = itemView.findViewById(R.id.checkbox_list_text);
+            redirectionTextView = itemView.findViewById(R.id.checkbox_list_subtext);
         }
     }
 }

@@ -24,23 +24,23 @@ public class HostsSourcesViewModel extends AndroidViewModel {
 
     public HostsSourcesViewModel(@NonNull Application application) {
         super(application);
-        this.hostsSourceDao = AppDatabase.getInstance(this.getApplication()).hostsSourceDao();
+        hostsSourceDao = AppDatabase.getInstance(getApplication()).hostsSourceDao();
     }
 
     public LiveData<List<HostsSource>> getHostsSources() {
-        return this.hostsSourceDao.loadAll();
+        return hostsSourceDao.loadAll();
     }
 
     public void toggleSourceEnabled(HostsSource source) {
         source.setEnabled(!source.isEnabled());
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostsSourceDao.update(source));
+        AppExecutors.getInstance().diskIO().execute(() -> hostsSourceDao.update(source));
     }
 
     public void addSourceFromUrl(String url) {
         HostsSource source = new HostsSource();
         source.setUrl(url);
         source.setEnabled(true);
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostsSourceDao.insert(source));
+        AppExecutors.getInstance().diskIO().execute(() -> hostsSourceDao.insert(source));
     }
 
     public void updateSourceUrl(HostsSource source, String url) {
@@ -48,12 +48,12 @@ public class HostsSourcesViewModel extends AndroidViewModel {
         newSource.setUrl(url);
         newSource.setEnabled(source.isEnabled());
         AppExecutors.getInstance().diskIO().execute(() -> {
-            this.hostsSourceDao.delete(source);
-            this.hostsSourceDao.insert(newSource);
+            hostsSourceDao.delete(source);
+            hostsSourceDao.insert(newSource);
         });
     }
 
     public void removeSource(HostsSource source) {
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostsSourceDao.delete(source));
+        AppExecutors.getInstance().diskIO().execute(() -> hostsSourceDao.delete(source));
     }
 }

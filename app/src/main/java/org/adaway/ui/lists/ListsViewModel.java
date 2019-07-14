@@ -30,24 +30,24 @@ public class ListsViewModel extends AndroidViewModel {
 
     public ListsViewModel(@NonNull Application application) {
         super(application);
-        this.hostListItemDao = AppDatabase.getInstance(this.getApplication()).hostsListItemDao();
+        hostListItemDao = AppDatabase.getInstance(getApplication()).hostsListItemDao();
     }
 
     public LiveData<List<HostListItem>> getBlackListItems() {
-        return this.hostListItemDao.loadBlackList();
+        return hostListItemDao.loadBlackList();
     }
 
     public LiveData<List<HostListItem>> getWhiteListItems() {
-        return this.hostListItemDao.loadWhiteList();
+        return hostListItemDao.loadWhiteList();
     }
 
     public LiveData<List<HostListItem>> getRedirectionListItems() {
-        return this.hostListItemDao.loadRedirectionList();
+        return hostListItemDao.loadRedirectionList();
     }
 
     public void toggleItemEnabled(HostListItem item) {
         item.setEnabled(!item.isEnabled());
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostListItemDao.update(item));
+        AppExecutors.getInstance().diskIO().execute(() -> hostListItemDao.update(item));
     }
 
     public void addListItem(@NonNull ListType type, @NonNull String host, String redirection) {
@@ -58,7 +58,7 @@ public class ListsViewModel extends AndroidViewModel {
         item.setEnabled(true);
         AppExecutors.getInstance().diskIO().execute(() -> {
             try {
-                this.hostListItemDao.insert(item);
+                hostListItemDao.insert(item);
             } catch (SQLiteConstraintException exception) {
                 Log.w(Constants.TAG, "Unable to add duplicate list item: " + item + ".", exception);
             }
@@ -72,12 +72,12 @@ public class ListsViewModel extends AndroidViewModel {
         newItem.setRedirection(redirection);
         newItem.setEnabled(item.isEnabled());
         AppExecutors.getInstance().diskIO().execute(() -> {
-            this.hostListItemDao.delete(item);
-            this.hostListItemDao.insert(newItem);
+            hostListItemDao.delete(item);
+            hostListItemDao.insert(newItem);
         });
     }
 
     public void removeListItem(HostListItem list) {
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostListItemDao.delete(list));
+        AppExecutors.getInstance().diskIO().execute(() -> hostListItemDao.delete(list));
     }
 }

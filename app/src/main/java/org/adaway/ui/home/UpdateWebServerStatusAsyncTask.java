@@ -24,7 +24,7 @@ public class UpdateWebServerStatusAsyncTask extends AsyncTask<Void, Void, Boolea
      */
     UpdateWebServerStatusAsyncTask(HomeFragment homeFragment) {
         // Store weak reference to home fragment
-        this.homeFragmentReference = new WeakReference<>(homeFragment);
+        homeFragmentReference = new WeakReference<>(homeFragment);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class UpdateWebServerStatusAsyncTask extends AsyncTask<Void, Void, Boolea
     @Override
     protected void onPostExecute(Boolean isWebServerRunning) {
         // Get the home fragment
-        HomeFragment homeFragment = this.homeFragmentReference.get();
+        HomeFragment homeFragment = homeFragmentReference.get();
         if (homeFragment == null) {
             return;
         }
