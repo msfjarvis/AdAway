@@ -155,10 +155,10 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Store activity
-        this.mActivity = this.getActivity();
-        this.setHasOptionsMenu(true);
+        mActivity = getActivity();
+        setHasOptionsMenu(true);
         // Initialize view model
-        this.mViewModel = ViewModelProviders.of(this).get(HostsSourcesViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(HostsSourcesViewModel.class);
         // Create fragment view
         View view = inflater.inflate(R.layout.hosts_sources_fragment, container, false);
         /*
@@ -170,7 +170,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
         HostsInstallSnackbar installSnackbar = new HostsInstallSnackbar(coordinatorLayout);
         installSnackbar.setIgnoreEventDuringInstall(true);
         // Bind snakbar to view models
-        this.mViewModel.getHostsSources().observe(this, installSnackbar.createObserver());
+        mViewModel.getHostsSources().observe(this, installSnackbar.createObserver());
         /*
          * Configure recycler view.
          */
@@ -178,18 +178,18 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
         RecyclerView recyclerView = view.findViewById(R.id.hosts_sources_list);
         recyclerView.setHasFixedSize(true);
         // Defile recycler layout
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.mActivity);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         recyclerView.setLayoutManager(linearLayoutManager);
         // Create recycler adapter
         ListAdapter adapter = new HostsSourcesAdapter(this);
         recyclerView.setAdapter(adapter);
         // Bind adapter to view model
-        this.mViewModel.getHostsSources().observe(this, adapter::submitList);
+        mViewModel.getHostsSources().observe(this, adapter::submitList);
         /*
          * Create action mode.
          */
         // Create action mode callback to display edit/delete menu
-        this.mActionCallback = new ActionMode.Callback() {
+        mActionCallback = new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
                 // Get menu inflater
@@ -213,10 +213,10 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
                 // Check item identifier
                 switch (item.getItemId()) {
                     case R.id.checkbox_list_context_edit:
-                        HostsSourcesFragment.this.editSource();
+                        editSource();
                         return true;
                     case R.id.checkbox_list_context_delete:
-                        HostsSourcesFragment.this.deleteSource();
+                        deleteSource();
                         return true;
                     default:
                         return false;
@@ -226,14 +226,14 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
             @Override
             public void onDestroyActionMode(ActionMode actionMode) {
                 // Clear view background color
-                if (HostsSourcesFragment.this.mActionSourceView != null) {
-                    HostsSourcesFragment.this.mActionSourceView.setBackgroundColor(Color.TRANSPARENT);
+                if (mActionSourceView != null) {
+                    mActionSourceView.setBackgroundColor(Color.TRANSPARENT);
                 }
                 // Clear current source and its view
-                HostsSourcesFragment.this.mActionSource = null;
-                HostsSourcesFragment.this.mActionSourceView = null;
+                mActionSource = null;
+                mActionSourceView = null;
                 // Clear action mode
-                HostsSourcesFragment.this.mActionMode = null;
+                mActionMode = null;
             }
         };
         /*
@@ -244,7 +244,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
         // Set click listener to display menu add entry
         button.setOnClickListener(actionButton -> {
             // Display menu add entry
-            HostsSourcesFragment.this.addSource();
+            addSource();
         });
         // Return fragment view
         return view;
@@ -253,24 +253,24 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
 
     @Override
     public void toggleEnabled(HostsSource source) {
-        this.mViewModel.toggleSourceEnabled(source);
+        mViewModel.toggleSourceEnabled(source);
     }
 
     @Override
     public boolean startAction(HostsSource source, View sourceView) {
         // Check if there is already a current action
-        if (this.mActionMode != null) {
+        if (mActionMode != null) {
             return false;
         }
         // Store current source and its view
-        this.mActionSource = source;
-        this.mActionSourceView = sourceView;
+        mActionSource = source;
+        mActionSourceView = sourceView;
         // Get current item background color
-        int currentItemBackgroundColor = this.getResources().getColor(R.color.selected_background);
+        int currentItemBackgroundColor = getResources().getColor(R.color.selected_background);
         // Apply background color to view
-        this.mActionSourceView.setBackgroundColor(currentItemBackgroundColor);
+        mActionSourceView.setBackgroundColor(currentItemBackgroundColor);
         // Start action mode and store it
-        this.mActionMode = this.mActivity.startActionMode(this.mActionCallback);
+        mActionMode = mActivity.startActionMode(mActionCallback);
         // Return event consumed
         return true;
     }
@@ -367,7 +367,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
         Editable inputEditContent = inputEditText.getText();
         inputEditText.setSelection(inputEditContent.length());
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.hosts_add_dialog_title)
                 .setCancelable(true)
                 .setView(view)
@@ -378,7 +378,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
                             String url = inputEditText.getText().toString();
                             if (HostsSource.isValidUrl(url)) {
                                 // Insert hosts source into database
-                                this.mViewModel.addSourceFromUrl(url);
+                                mViewModel.addSourceFromUrl(url);
                             }
                             dialog.dismiss();
                         }
@@ -401,10 +401,10 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
      */
     private void editSource() {
         // Check action source
-        if (this.mActionSource == null) {
+        if (mActionSource == null) {
             return;
         }
-        HostsSource editedSource = this.mActionSource;
+        HostsSource editedSource = mActionSource;
         // Create dialog view
         LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.hosts_sources_dialog, null);
@@ -415,7 +415,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
         Editable inputEditContent = inputEditText.getText();
         inputEditText.setSelection(inputEditContent.length());
         // Create dialog builder
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.hosts_edit_dialog_title)
                 .setCancelable(true)
                 .setView(view)
@@ -425,12 +425,12 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
                             // Close dialog
                             dialog.dismiss();
                             // Finish action mode
-                            HostsSourcesFragment.this.mActionMode.finish();
+                            mActionMode.finish();
                             // Check url validity
                             String url = inputEditText.getText().toString();
                             if (HostsSource.isValidUrl(url)) {
                                 // Update hosts source into database
-                                this.mViewModel.updateSourceUrl(editedSource, url);
+                                mViewModel.updateSourceUrl(editedSource, url);
                             }
                         }
                 )
@@ -439,7 +439,7 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
                             // Close dialog
                             dialog.dismiss();
                             // Finish action mode
-                            HostsSourcesFragment.this.mActionMode.finish();
+                            mActionMode.finish();
                         }
                 )
                 .create();
@@ -456,12 +456,12 @@ public class HostsSourcesFragment extends Fragment implements HostsSourcesViewCa
      */
     private void deleteSource() {
         // Check current source
-        if (this.mActionSource == null) {
+        if (mActionSource == null) {
             return;
         }
         // Remove related hosts source
-        this.mViewModel.removeSource(this.mActionSource);
+        mViewModel.removeSource(mActionSource);
         // Finish action mode
-        this.mActionMode.finish();
+        mActionMode.finish();
     }
 }

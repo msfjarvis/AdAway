@@ -63,15 +63,15 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
             shell = Shell.startCustomShell("su -mm");
             Toolbox toolbox = new Toolbox(shell);
             // Ensure mounted hosts file exists
-            if (!toolbox.fileExists(this.mode.hostsFileLocation)) {
+            if (!toolbox.fileExists(mode.hostsFileLocation)) {
                 // Copy current hosts file to mounted host file
-                if (!toolbox.copyFile(Constants.ANDROID_SYSTEM_ETC_HOSTS, this.mode.hostsFileLocation, false, true)) {
-                    Log.w(Constants.TAG, "Could not copy hosts file to " + this.mode.hostsFileLocation + ".");
+                if (!toolbox.copyFile(Constants.ANDROID_SYSTEM_ETC_HOSTS, mode.hostsFileLocation, false, true)) {
+                    Log.w(Constants.TAG, "Could not copy hosts file to " + mode.hostsFileLocation + ".");
                     return false;
                 }
             }
             // Check if systemless mode is already enabled
-            if (this.isEnabled(context, shell)) {
+            if (isEnabled(context, shell)) {
                 return true;
             }
             /*
@@ -82,16 +82,16 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
             File tempFile = File.createTempFile(Constants.TAG, ".script", cacheDir);
             // Write script content to temp file
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-                writer.write("mount -o bind " + this.mode.hostsFileLocation + " " + Constants.ANDROID_SYSTEM_ETC_HOSTS + ";");
+                writer.write("mount -o bind " + mode.hostsFileLocation + " " + Constants.ANDROID_SYSTEM_ETC_HOSTS + ";");
                 writer.newLine();
             }
             // Copy temp file to systemless script location
-            if (!toolbox.copyFile(tempFile.getAbsolutePath(), this.mode.systemlessScriptLocation, false, false)) {
-                Log.w(Constants.TAG, "Could not copy the systemless script to " + this.mode.systemlessScriptLocation + ".");
+            if (!toolbox.copyFile(tempFile.getAbsolutePath(), mode.systemlessScriptLocation, false, false)) {
+                Log.w(Constants.TAG, "Could not copy the systemless script to " + mode.systemlessScriptLocation + ".");
                 return false;
             }
             // Apply script permissions
-            if (!toolbox.setFilePermissions(this.mode.systemlessScriptLocation, "755")) {
+            if (!toolbox.setFilePermissions(mode.systemlessScriptLocation, "755")) {
                 Log.w(Constants.TAG, "Could not set systemless script rights.");
                 return false;
             }
@@ -100,14 +100,14 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
                 Log.i(Constants.TAG, "Could not delete the temporary script file.");
             }
             // Execute script
-            SimpleCommand command = new SimpleCommand(this.mode.systemlessScriptLocation);
+            SimpleCommand command = new SimpleCommand(mode.systemlessScriptLocation);
             shell.add(command).waitForFinish();
             if (command.getExitCode() != 0) {
                 Log.w(Constants.TAG, "Could not execute the systemless script.");
                 return false;
             }
             // Check if installation is successful
-            if (!this.isEnabled(context, shell)) {
+            if (!isEnabled(context, shell)) {
                 Log.w(Constants.TAG, "Systemless mode installation was successful but systemless is not working.");
                 return false;
             }
@@ -144,12 +144,12 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
             // Start root shell
             shell = Shell.startRootShell();
             // Check if systemless mode is enabled
-            if (!this.isEnabled(context, shell)) {
+            if (!isEnabled(context, shell)) {
                 return true;
             }
             // Remove systemless script
             SimpleCommand removeScriptCommand =
-                    new SimpleCommand(Constants.COMMAND_RM + " " + this.mode.systemlessScriptLocation);
+                    new SimpleCommand(Constants.COMMAND_RM + " " + mode.systemlessScriptLocation);
             shell.add(removeScriptCommand).waitForFinish();
             if (removeScriptCommand.getExitCode() != 0) {
                 Log.w(Constants.TAG, "Couldn't remove systemless script.");
@@ -161,7 +161,7 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
             shell.add(umountCommand).waitForFinish();
             // Remove mounted hosts file
             SimpleCommand removeMountedHostsCommand =
-                    new SimpleCommand(Constants.COMMAND_RM + " " + this.mode.hostsFileLocation);
+                    new SimpleCommand(Constants.COMMAND_RM + " " + mode.hostsFileLocation);
             shell.add(removeMountedHostsCommand).waitForFinish();
             // Return successfully removed
             return true;
@@ -183,7 +183,7 @@ public class SuperSuSystemlessMode extends AbstractSystemlessMode {
     @Override
     public boolean isRebootNeededAfterActivation() {
         // Reboot is only needed with "bind sbin" systemless mode
-        return this.mode == Mode.BIND_SBIN;
+        return mode == Mode.BIND_SBIN;
     }
 
     /**
