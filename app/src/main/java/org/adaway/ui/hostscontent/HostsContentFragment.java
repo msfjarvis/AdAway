@@ -40,7 +40,7 @@ public class HostsContentFragment extends Fragment {
          * Create view.
          */
         // Retrieve activity
-        FragmentActivity activity = this.getActivity();
+        FragmentActivity activity = getActivity();
         // Create fragment view
         View view = inflater.inflate(R.layout.hosts_content_fragment, container, false);
         /*

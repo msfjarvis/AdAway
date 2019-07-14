@@ -32,8 +32,8 @@ public class AlertDialogValidator implements TextWatcher {
      * @param initialState The validation initial state.
      */
     public AlertDialogValidator(AlertDialog dialog, Function<String, Boolean> validator, boolean initialState) {
-        this.mButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        this.mButton.setEnabled(initialState);
+        mButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        mButton.setEnabled(initialState);
         this.validator = validator;
     }
 
@@ -50,6 +50,6 @@ public class AlertDialogValidator implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         String url = s.toString();
-        this.mButton.setEnabled(this.validator.apply(url));
+        mButton.setEnabled(validator.apply(url));
     }
 }

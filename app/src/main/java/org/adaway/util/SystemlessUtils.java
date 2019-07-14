@@ -29,8 +29,8 @@ public class SystemlessUtils {
      */
     public static AbstractSystemlessMode getSystemlessMode() {
         // Check cached systemless mode
-        if (SystemlessUtils.systemlessMode != null) {
-            return SystemlessUtils.systemlessMode;
+        if (systemlessMode != null) {
+            return systemlessMode;
         }
         // Declare shell
         Shell shell = null;
@@ -39,20 +39,20 @@ public class SystemlessUtils {
             shell = Shell.startShell();
             // Check each supported su implementations
             if (SystemlessUtils.checkChainFireSuperSuBindSbin(shell)) {
-                SystemlessUtils.systemlessMode = new SuperSuSystemlessMode(SuperSuSystemlessMode.Mode.BIND_SBIN);
+                systemlessMode = new SuperSuSystemlessMode(SuperSuSystemlessMode.Mode.BIND_SBIN);
             } else if (SystemlessUtils.checkChainFireSuperSuSuPartition(shell)) {
-                SystemlessUtils.systemlessMode = new SuperSuSystemlessMode(SuperSuSystemlessMode.Mode.SU_PARTITION);
+                systemlessMode = new SuperSuSystemlessMode(SuperSuSystemlessMode.Mode.SU_PARTITION);
             } else if (SystemlessUtils.checkPhhSuperUserSuBind(shell)) {
-                SystemlessUtils.systemlessMode = new SuperUserSystemlessMode();
+                systemlessMode = new SuperUserSystemlessMode();
             } else if (SystemlessUtils.checkMagiskSu(shell)) {
-                SystemlessUtils.systemlessMode = new MagiskSuSystemlessMode();
+                systemlessMode = new MagiskSuSystemlessMode();
             } else {
                 // Otherwise not supported systemless mode
-                SystemlessUtils.systemlessMode = new NotSupportedSystemlessMode();
+                systemlessMode = new NotSupportedSystemlessMode();
             }
         } catch (Exception exception) {
             Log.e(Constants.TAG, "Error while getting systemless mode.", exception);
-            SystemlessUtils.systemlessMode = new NotSupportedSystemlessMode();
+            systemlessMode = new NotSupportedSystemlessMode();
         } finally {
             // Close shell
             if (shell != null) {
@@ -64,7 +64,7 @@ public class SystemlessUtils {
             }
         }
         // Return found systemless mode
-        return SystemlessUtils.systemlessMode;
+        return systemlessMode;
     }
 
     /**

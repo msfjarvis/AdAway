@@ -38,15 +38,15 @@ public class PrefsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Configure preferences
-        this.getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
-        this.addPreferencesFromResource(R.xml.preferences);
+        getPreferenceManager().setSharedPreferencesName(Constants.PREFS_NAME);
+        addPreferencesFromResource(R.xml.preferences);
         // Get current context
-        Context context = this.getActivity();
+        Context context = getActivity();
 
         /*
          * Display notification on theme change to tell user to restart application.
          */
-        Preference darkThemePref = this.findPreference(getString(R.string.pref_dark_theme_key));
+        Preference darkThemePref = findPreference(getString(R.string.pref_dark_theme_key));
         darkThemePref.setOnPreferenceChangeListener((preference, newValue) -> {
             // Display user toast notification
             Toast.makeText(
@@ -61,7 +61,7 @@ public class PrefsFragment extends PreferenceFragmentCompat {
         /*
          * Enable systemless mode systemless mode if supported.
          */
-        Preference SystemlessPref = this.findPreference(getString(R.string.pref_enable_systemless_key));
+        Preference SystemlessPref = findPreference(getString(R.string.pref_enable_systemless_key));
         SystemlessPref.setOnPreferenceChangeListener((preference, newValue) -> {
             // Get device systemless mode
             AbstractSystemlessMode systemlessMode = SystemlessUtils.getSystemlessMode();
@@ -98,8 +98,8 @@ public class PrefsFragment extends PreferenceFragmentCompat {
          * setOnPreferenceChangeListener is not used because it is executed before setting the
          * preference value, this would lead to a false check in UpdateListener
          */
-        Preference updateDailyPref = this.findPreference(getString(R.string.pref_update_check_daily_key));
-        Preference updateOnlyOnWifiPref = this.findPreference(this.getString(R.string.pref_update_only_on_wifi_key));
+        Preference updateDailyPref = findPreference(getString(R.string.pref_update_check_daily_key));
+        Preference updateOnlyOnWifiPref = findPreference(getString(R.string.pref_update_only_on_wifi_key));
         Preference.OnPreferenceClickListener onPreferenceClickListener = preference -> {
             if (PreferenceHelper.getUpdateCheckDaily(context)) {
                 boolean unmeteredNetworkOnly = PreferenceHelper.getUpdateOnlyOnWifi(context);
@@ -113,7 +113,7 @@ public class PrefsFragment extends PreferenceFragmentCompat {
         updateOnlyOnWifiPref.setOnPreferenceClickListener(onPreferenceClickListener);
 
         // Start web server when preference is enabled
-        Preference WebServerEnabledPref = this.findPreference(getString(R.string.pref_webserver_enabled_key));
+        Preference WebServerEnabledPref = findPreference(getString(R.string.pref_webserver_enabled_key));
         WebServerEnabledPref.setOnPreferenceChangeListener((preference, newValue) -> {
             if (newValue.equals(true)) {
                 // Start web server
@@ -153,7 +153,7 @@ public class PrefsFragment extends PreferenceFragmentCompat {
         Preference enableTelemetryPref = findPreference(getString(R.string.pref_enable_telemetry_key));
         enableTelemetryPref.setEnabled(!SentryLog.isStub());
         enableTelemetryPref.setOnPreferenceChangeListener((preference, newValue) -> {
-            SentryLog.setEnabled(this.getContext(), (boolean) newValue);
+            SentryLog.setEnabled(getContext(), (boolean) newValue);
             return true;
         });
 
@@ -206,7 +206,7 @@ public class PrefsFragment extends PreferenceFragmentCompat {
             }
             // Enable setting and set initial value
             mSystemless.setEnabled(systemlessMode.isSupported());
-            mSystemless.setChecked(systemlessMode.isEnabled(PrefsFragment.this.getActivity()));
+            mSystemless.setChecked(systemlessMode.isEnabled(getActivity()));
         }
     }
 }
