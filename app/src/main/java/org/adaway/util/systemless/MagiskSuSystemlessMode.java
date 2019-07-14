@@ -36,25 +36,25 @@ public class MagiskSuSystemlessMode extends AbstractSystemlessMode {
             // Start root shell with "mount master" feature (to apply 'publicly' the mount)
             shell = Shell.startCustomShell(Utils.getSuPath() + " -mm");
             // Check if systemless mode is already enabled
-            if (this.isEnabled(context, shell)) {
+            if (isEnabled(context, shell)) {
                 return true;
             }
             // Copy system hosts file to Magisk path
-            SimpleCommand copyCommand = new SimpleCommand("cp -af " + Constants.ANDROID_SYSTEM_ETC_HOSTS + " " + this.getMagiskHostsFile(shell));
+            SimpleCommand copyCommand = new SimpleCommand("cp -af " + Constants.ANDROID_SYSTEM_ETC_HOSTS + " " + getMagiskHostsFile(shell));
             shell.add(copyCommand).waitForFinish();
             if (copyCommand.getExitCode() != 0) {
                 Log.w(Constants.TAG, "Could not copy hosts file to Magisk path.");
                 return false;
             }
             // Mount Magisk hosts file over system hosts file
-            SimpleCommand mountCommand = new SimpleCommand("mount -o bind " + this.getMagiskHostsFile(shell) + " " + Constants.ANDROID_SYSTEM_ETC_HOSTS);
+            SimpleCommand mountCommand = new SimpleCommand("mount -o bind " + getMagiskHostsFile(shell) + " " + Constants.ANDROID_SYSTEM_ETC_HOSTS);
             shell.add(mountCommand).waitForFinish();
             if (mountCommand.getExitCode() != 0) {
                 Log.w(Constants.TAG, "Could not mount Magisk hosts file to system hosts file.");
                 return false;
             }
             // Check if installation is successful
-            if (!this.isEnabled(context, shell)) {
+            if (!isEnabled(context, shell)) {
                 Log.w(Constants.TAG, "Systemless mode installation was successful but systemless is not working.");
                 return false;
             }
@@ -86,14 +86,14 @@ public class MagiskSuSystemlessMode extends AbstractSystemlessMode {
             // Start root shell with "mount master" feature (to apply 'publicly' the mount)
             shell = Shell.startCustomShell(Utils.getSuPath() + " -mm");
             // Check if systemless mode is enabled
-            if (!this.isEnabled(context, shell)) {
+            if (!isEnabled(context, shell)) {
                 return true;
             }
             // Umount the system hosts file
             SimpleCommand umountCommand = new SimpleCommand("umount -l " + Constants.ANDROID_SYSTEM_ETC_HOSTS);
             shell.add(umountCommand).waitForFinish();
             // Remove Magisk hosts file mounted hosts file
-            SimpleCommand removeCommand = new SimpleCommand(Constants.COMMAND_RM + " " + this.getMagiskHostsFile(shell));
+            SimpleCommand removeCommand = new SimpleCommand(Constants.COMMAND_RM + " " + getMagiskHostsFile(shell));
             shell.add(removeCommand).waitForFinish();
             // Return successfully removed
             return true;
@@ -130,7 +130,7 @@ public class MagiskSuSystemlessMode extends AbstractSystemlessMode {
      * @return The Magisk path.
      */
     private String getMagiskHostsFile(Shell rootShell) {
-        return this.getMagiskPath(rootShell) + "/.core/hosts";
+        return getMagiskPath(rootShell) + "/.core/hosts";
     }
 
     /**

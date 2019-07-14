@@ -60,10 +60,10 @@ class TcpdumpLogAdapter extends ListAdapter<LogEntry, TcpdumpLogAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull TcpdumpLogAdapter.ViewHolder holder, int position) {
         // Get log entry
-        LogEntry entry = this.getItem(position);
+        LogEntry entry = getItem(position);
         // Set host name
         holder.hostnameTextView.setText(entry.getHost());
-        holder.hostnameTextView.setOnClickListener(v -> this.callback.openHostInBrowser(entry.getHost()));
+        holder.hostnameTextView.setOnClickListener(v -> callback.openHostInBrowser(entry.getHost()));
         // Set type status
         bindImageView(holder.blackImageView, ListType.BLACK_LIST, entry);
         bindImageView(holder.whiteImageView, ListType.WHITE_LIST, entry);
@@ -72,12 +72,12 @@ class TcpdumpLogAdapter extends ListAdapter<LogEntry, TcpdumpLogAdapter.ViewHold
 
     private void bindImageView(ImageView imageView, ListType type, LogEntry entry) {
         if (type == entry.getType()) {
-            int primaryColor = this.callback.getColor(R.color.primary);
+            int primaryColor = callback.getColor(R.color.primary);
             imageView.setColorFilter(primaryColor, PorterDuff.Mode.MULTIPLY);
-            imageView.setOnClickListener(v -> this.callback.removeListItem(entry.getHost()));
+            imageView.setOnClickListener(v -> callback.removeListItem(entry.getHost()));
         } else {
             imageView.clearColorFilter();
-            imageView.setOnClickListener(v -> this.callback.addListItem(entry.getHost(), type));
+            imageView.setOnClickListener(v -> callback.addListItem(entry.getHost(), type));
         }
     }
 
@@ -99,10 +99,10 @@ class TcpdumpLogAdapter extends ListAdapter<LogEntry, TcpdumpLogAdapter.ViewHold
          */
         ViewHolder(View itemView) {
             super(itemView);
-            this.blackImageView = itemView.findViewById(R.id.blockImageView);
-            this.whiteImageView = itemView.findViewById(R.id.whiteImageView);
-            this.redirectionImageView = itemView.findViewById(R.id.redirectionImageView);
-            this.hostnameTextView = itemView.findViewById(R.id.hostnameTextView);
+            blackImageView = itemView.findViewById(R.id.blockImageView);
+            whiteImageView = itemView.findViewById(R.id.whiteImageView);
+            redirectionImageView = itemView.findViewById(R.id.redirectionImageView);
+            hostnameTextView = itemView.findViewById(R.id.hostnameTextView);
         }
     }
 }

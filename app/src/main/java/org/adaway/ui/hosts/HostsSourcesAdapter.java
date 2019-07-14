@@ -67,7 +67,7 @@ class HostsSourcesAdapter extends ListAdapter<HostsSource, HostsSourcesAdapter.V
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        HostsSource source = this.getItem(position);
+        HostsSource source = getItem(position);
         holder.enabledCheckBox.setChecked(source.isEnabled());
         holder.enabledCheckBox.setOnClickListener(view -> viewCallback.toggleEnabled(source));
         holder.hostnameTextView.setText(source.getUrl());
@@ -77,7 +77,7 @@ class HostsSourcesAdapter extends ListAdapter<HostsSource, HostsSourcesAdapter.V
 
     private String getUpdateText(HostsSource source) {
         // Get context
-        Context context = this.viewCallback.getContext();
+        Context context = viewCallback.getContext();
         // Check modification dates
         boolean lastOnlineModificationDefined = source.getLastOnlineModification() != null &&
                 source.getLastOnlineModification().getTime() != 0;
@@ -116,9 +116,9 @@ class HostsSourcesAdapter extends ListAdapter<HostsSource, HostsSourcesAdapter.V
          */
         ViewHolder(View itemView) {
             super(itemView);
-            this.enabledCheckBox = itemView.findViewById(R.id.checkbox_list_checkbox);
-            this.hostnameTextView = itemView.findViewById(R.id.checkbox_list_text);
-            this.updateTextView = itemView.findViewById(R.id.checkbox_list_subtext);
+            enabledCheckBox = itemView.findViewById(R.id.checkbox_list_checkbox);
+            hostnameTextView = itemView.findViewById(R.id.checkbox_list_text);
+            updateTextView = itemView.findViewById(R.id.checkbox_list_subtext);
         }
     }
 }

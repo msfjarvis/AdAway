@@ -233,7 +233,7 @@ public class ImportExportHelper {
          */
         private ImportTask(Context context) {
             // Store context into weak reference to prevent memory leak
-            this.mWeakContext = new WeakReference<>(context);
+            mWeakContext = new WeakReference<>(context);
         }
 
         @Override
@@ -245,7 +245,7 @@ public class ImportExportHelper {
             // Get URI to export lists
             Uri result = results[0];
             // Get context from weak reference
-            Context context = this.mWeakContext.get();
+            Context context = mWeakContext.get();
             if (context == null) {
                 return false;
             }
@@ -276,24 +276,24 @@ public class ImportExportHelper {
         protected void onPreExecute() {
             super.onPreExecute();
             // Get context from weak reference
-            Context context = this.mWeakContext.get();
+            Context context = mWeakContext.get();
             if (context == null) {
                 return;
             }
             // Check and show progress dialog
-            this.mProgressDialog = new ProgressDialog(context);
-            this.mProgressDialog.setMessage(context.getString(R.string.import_dialog));
-            this.mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            this.mProgressDialog.setCancelable(false);
-            this.mProgressDialog.show();
+            mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setMessage(context.getString(R.string.import_dialog));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
         }
 
         @Override
         protected void onPostExecute(Boolean imported) {
             super.onPostExecute(imported);
             // Check progress dialog
-            if (this.mProgressDialog != null) {
-                this.mProgressDialog.dismiss();
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
             }
             // Get context from weak reference
             Context context = this.mWeakContext.get();
@@ -332,13 +332,13 @@ public class ImportExportHelper {
          */
         private ExportTask(Context context) {
             // Store context into weak reference to prevent memory leak
-            this.mWeakContext = new WeakReference<>(context);
+            mWeakContext = new WeakReference<>(context);
         }
 
         @Override
         protected Boolean doInBackground(Void... unused) {
             // Get context from weak reference
-            Context context = this.mWeakContext.get();
+            Context context = mWeakContext.get();
             if (context == null) {
                 // Fail to export
                 return false;
@@ -371,27 +371,27 @@ public class ImportExportHelper {
         protected void onPreExecute() {
             super.onPreExecute();
             // Check context weak reference
-            Context context = this.mWeakContext.get();
+            Context context = mWeakContext.get();
             if (context == null) {
                 return;
             }
             // Create and show progress dialog
-            this.mProgressDialog = new ProgressDialog(context);
-            this.mProgressDialog.setMessage(context.getString(R.string.export_dialog));
-            this.mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            this.mProgressDialog.setCancelable(false);
-            this.mProgressDialog.show();
+            mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setMessage(context.getString(R.string.export_dialog));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
         }
 
         @Override
         protected void onPostExecute(Boolean exported) {
             super.onPostExecute(exported);
             // Check progress dialog
-            if (this.mProgressDialog != null) {
-                this.mProgressDialog.dismiss();
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
             }
             // Get context from weak reference
-            Context context = this.mWeakContext.get();
+            Context context = mWeakContext.get();
             if (context == null) {
                 return;
             }
