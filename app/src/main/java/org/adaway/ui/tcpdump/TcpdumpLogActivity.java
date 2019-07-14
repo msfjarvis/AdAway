@@ -75,7 +75,7 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
          */
         super.onCreate(savedInstanceState);
         ThemeHelper.applyTheme(this);
-        this.setContentView(R.layout.tcpdump_log_activity);
+        setContentView(R.layout.tcpdump_log_activity);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -85,18 +85,18 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
          * Configure swipe layout.
          */
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> this.mViewModel.updateDnsRequests());
+        swipeRefreshLayout.setOnRefreshListener(() -> mViewModel.updateDnsRequests());
         /*
          * Configure recycler view.
          */
         // Get recycler view
-        RecyclerView recyclerView = this.findViewById(R.id.tcpdump_log_list);
+        RecyclerView recyclerView = findViewById(R.id.tcpdump_log_list);
         recyclerView.setHasFixedSize(true);
         // Defile recycler layout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         // Get view model
-        this.mViewModel = ViewModelProviders.of(this).get(TcpdumpLogViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(TcpdumpLogViewModel.class);
         // Create recycler adapter
         ListAdapter adapter = new TcpdumpLogAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -104,24 +104,24 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
          * Configure snackbar.
          */
         // Create install snackbar
-        this.mInstallSnackbar = new HostsInstallSnackbar(swipeRefreshLayout);
+        mInstallSnackbar = new HostsInstallSnackbar(swipeRefreshLayout);
         /*
          * Load data.
          */
         // Bind view model to the list view
-        this.mViewModel.getLogEntries().observe(this, logEntries -> {
+        mViewModel.getLogEntries().observe(this, logEntries -> {
             adapter.submitList(logEntries);
             swipeRefreshLayout.setRefreshing(false);
         });
         // Mark as loading data
         swipeRefreshLayout.setRefreshing(true);
         // Load initial data
-        this.mViewModel.updateDnsRequests();
+        mViewModel.updateDnsRequests();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = this.getMenuInflater();
+        MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.tcpdump_menu, menu);
         return true;
     }
@@ -136,11 +136,11 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
                 startActivity(intent);
                 return true;
             case R.id.sort:
-                this.mViewModel.toggleSort();
+                mViewModel.toggleSort();
                 return true;
             case R.id.clear:
                 TcpdumpUtils.clearLogFile(this);
-                this.mViewModel.updateDnsRequests();
+                mViewModel.updateDnsRequests();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -150,15 +150,15 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
     @Override
     public void addListItem(@NonNull String hostName, @NonNull ListType type) {
         // Check view model and snackbar notification
-        if (this.mViewModel == null || this.mInstallSnackbar == null) {
+        if (mViewModel == null || mInstallSnackbar == null) {
             return;
         }
         // Check type other than redirection
         if (type != ListType.REDIRECTION_LIST) {
             // Insert list item
-            this.mViewModel.addListItem(hostName, type, null);
+            mViewModel.addListItem(hostName, type, null);
             // Display snackbar notification
-            this.mInstallSnackbar.notifyUpdateAvailable();
+            mInstallSnackbar.notifyUpdateAvailable();
         } else {
             // Create dialog view
             LayoutInflater factory = LayoutInflater.from(this);
@@ -179,9 +179,9 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
                                 String ip = ipEditText.getText().toString();
                                 if (RegexUtils.isValidIP(ip)) {
                                     // Insert list item
-                                    this.mViewModel.addListItem(hostName, type, ip);
+                                    mViewModel.addListItem(hostName, type, ip);
                                     // Display snackbar notification
-                                    this.mInstallSnackbar.notifyUpdateAvailable();
+                                    mInstallSnackbar.notifyUpdateAvailable();
                                 }
                             }
                     )
@@ -201,9 +201,9 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
 
     @Override
     public void removeListItem(@NonNull String hostName) {
-        if (this.mViewModel != null && this.mInstallSnackbar != null) {
-            this.mViewModel.removeListItem(hostName);
-            this.mInstallSnackbar.notifyUpdateAvailable();
+        if (mViewModel != null && mInstallSnackbar != null) {
+            mViewModel.removeListItem(hostName);
+            mInstallSnackbar.notifyUpdateAvailable();
         }
     }
 
@@ -211,6 +211,6 @@ public class TcpdumpLogActivity extends AppCompatActivity implements TcpdumpLogV
     public void openHostInBrowser(@NonNull String hostName) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://" + hostName));
-        this.startActivity(intent);
+        startActivity(intent);
     }
 }
