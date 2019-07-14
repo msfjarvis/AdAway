@@ -124,20 +124,20 @@ public class MainActivity extends AppCompatActivity {
         /*
          * Configure navigation drawer.
          */
-        this.mDrawer = this.findViewById(R.id.left_drawer);
+        mDrawer = findViewById(R.id.left_drawer);
         // Configure drawer items
         String[] drawerItems = getResources().getStringArray(R.array.drawer_items);
-        this.mDrawerList = this.findViewById(R.id.left_drawer_list);
-        this.mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerItems));
+        mDrawerList = findViewById(R.id.left_drawer_list);
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, drawerItems));
         // Set drawer item listener
-        this.mDrawerList.setOnItemClickListener((parent, view, position, id) -> selectDrawerMenuItem(position));
+        mDrawerList.setOnItemClickListener((parent, view, position, id) -> selectDrawerMenuItem(position));
         // Configure drawer toggle
-        this.mTitle = this.mDrawerTitle = this.getTitle();
-        this.mSelectedMenuItem = 0;
-        this.mDrawerLayout = this.findViewById(R.id.drawer_layout);
-        this.mDrawerToggle = new ActionBarDrawerToggle(
+        mTitle = mDrawerTitle = getTitle();
+        mSelectedMenuItem = 0;
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
-                this.mDrawerLayout,         /* DrawerLayout object */
+                mDrawerLayout,         /* DrawerLayout object */
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
         ) {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onDrawerClosed(view);
                 ActionBar actionBar = getSupportActionBar();
                 if (actionBar != null) {
-                    actionBar.setTitle(MainActivity.this.mTitle);
+                    actionBar.setTitle(mTitle);
                 }
             }
 
@@ -157,19 +157,19 @@ public class MainActivity extends AppCompatActivity {
                 super.onDrawerOpened(drawerView);
                 ActionBar actionBar = getSupportActionBar();
                 if (actionBar != null) {
-                    actionBar.setTitle(MainActivity.this.mDrawerTitle);
+                    actionBar.setTitle(mDrawerTitle);
                 }
             }
 
         };
-        this.mDrawerLayout.addDrawerListener(this.mDrawerToggle);
-        this.updateSelectedMenuItem();
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        updateSelectedMenuItem();
         // Set version number and click listener
-        TextView versionNumberTextView = this.findViewById(R.id.version_number);
-        versionNumberTextView.setText(this.getApplicationVersion());
+        TextView versionNumberTextView = findViewById(R.id.version_number);
+        versionNumberTextView.setText(getApplicationVersion());
         versionNumberTextView.setOnClickListener(this::showProjectPage);
         // Set support text view click listener
-        TextView supportTextView = this.findViewById(R.id.support_text);
+        TextView supportTextView = findViewById(R.id.support_text);
         supportTextView.setOnClickListener(this::showSupportPage);
         /*
          * Configure actionbar.
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
             fragmentTransaction.commit();
             // Get shortcut extra if defined
-            Intent intent = this.getIntent();
+            Intent intent = getIntent();
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 String shortcut = extras.getString("shortcut", "");
@@ -215,9 +215,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             // Restore selected menu item
-            this.mSelectedMenuItem = savedInstanceState.getInt(SELECTED_MENU_ITEM_KEY, 0);
+            mSelectedMenuItem = savedInstanceState.getInt(SELECTED_MENU_ITEM_KEY, 0);
             // Restore activity title
-            this.updateSelectedMenuItem();
+            updateSelectedMenuItem();
         }
     }
 
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        this.mDrawerToggle.syncState();
+        mDrawerToggle.syncState();
         // Check user telemetry consent
         SentryLog.requestUserConsent(this);
     }
@@ -233,20 +233,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SELECTED_MENU_ITEM_KEY, this.mSelectedMenuItem);
+        outState.putInt(SELECTED_MENU_ITEM_KEY, mSelectedMenuItem);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        this.mDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle
         // If it returns true then it has handled the app icon touch event
-        if (this.mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle your other action bar items...
@@ -256,17 +256,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // Define HomeFragment as selected menu item
-        this.mSelectedMenuItem = 0;
+        mSelectedMenuItem = 0;
         // Delegate back pressed
         super.onBackPressed();
     }
 
     @Override
     public void setTitle(CharSequence title) {
-        this.mTitle = title;
-        ActionBar actionBar = this.getSupportActionBar();
+        mTitle = title;
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(this.mTitle);
+            actionBar.setTitle(mTitle);
         }
     }
 
@@ -298,9 +298,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 6:
                 // Restore drawer selected item
-                this.mDrawerList.setItemChecked(this.mSelectedMenuItem, true);
+                mDrawerList.setItemChecked(mSelectedMenuItem, true);
                 // Start help activity
-                this.startActivity(new Intent(this, HelpActivity.class));
+                startActivity(new Intent(this, HelpActivity.class));
                 // Do nothing more
                 return;
             default:
@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
         }
         // Update selected menu item
-        this.mSelectedMenuItem = position;
+        mSelectedMenuItem = position;
         // Pop back stack up to HomeFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(STACK_STATE_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
         // Close the drawer
-        this.mDrawerLayout.closeDrawer(this.mDrawer);
+        mDrawerLayout.closeDrawer(mDrawer);
     }
 
     /**
@@ -329,9 +329,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateSelectedMenuItem() {
         // Get position of selected menu item
-        int position = this.mSelectedMenuItem;
+        int position = mSelectedMenuItem;
         // Set selected item in drawer list
-        this.mDrawerList.setItemChecked(position, true);
+        mDrawerList.setItemChecked(position, true);
         // Get item name
         String itemName;
         if (position == 0) {
@@ -340,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
             itemName = getResources().getStringArray(R.array.drawer_items)[position];
         }
         // Update title with item name
-        this.setTitle(itemName);
+        setTitle(itemName);
         // Record breadcrumb
         SentryLog.recordBreadcrumb("Using \"" + itemName + "\" feature");
     }
@@ -352,8 +352,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private String getApplicationVersion() {
         try {
-            PackageManager manager = this.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            PackageManager manager = getPackageManager();
+            PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
             return info.versionName;
         } catch (PackageManager.NameNotFoundException exception) {
             Log.w(Constants.TAG, "Unable to get application version: " + exception.getMessage());
@@ -368,10 +368,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showProjectPage(@SuppressWarnings("unused") View view) {
         // Close the drawer
-        this.mDrawerLayout.closeDrawer(this.mDrawer);
+        mDrawerLayout.closeDrawer(mDrawer);
         // Show development page
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PROJECT_LINK));
-        this.startActivity(browserIntent);
+        startActivity(browserIntent);
     }
 
     /**
@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showSupportPage(@SuppressWarnings("unused") View view) {
         // Close the drawer
-        this.mDrawerLayout.closeDrawer(this.mDrawer);
+        mDrawerLayout.closeDrawer(mDrawer);
         // Show support dialog
         new MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.baseline_favorite_24)
@@ -390,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.drawer_support_dialog_button, (d, which) -> {
                     // Show support page
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(SUPPORT_LINK));
-                    this.startActivity(browserIntent);
+                    startActivity(browserIntent);
                 })
                 .create()
                 .show();

@@ -44,14 +44,14 @@ class GistHostsSource extends GitHostsSource {
             throw new MalformedURLException("The GitHub gist URL " + url + " is not valid.");
         }
         // Extract gist identifier from path
-        this.gistIdentifier = pathParts[2];
+        gistIdentifier = pathParts[2];
     }
 
     @Override
     @Nullable
     public Date getLastUpdate() {
         // Create commit API request URL
-        String commitApiUrl = "https://api.github.com/gists/" + this.gistIdentifier;
+        String commitApiUrl = "https://api.github.com/gists/" + gistIdentifier;
         // Create client and request
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(commitApiUrl).build();
