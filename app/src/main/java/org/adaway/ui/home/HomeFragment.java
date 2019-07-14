@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Get fragment context
-        Context context = this.getContext();
+        Context context = getContext();
         // Inflate layout
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         /*
@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
          * Initialize and bind to view model.
          */
         // Get the model scope
-        FragmentActivity activity = this.getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             // Get the model
             mViewModel = ViewModelProviders.of(activity).get(HostsInstallViewModel.class);
@@ -273,7 +273,7 @@ public class HomeFragment extends Fragment {
                 mCurrentError = HostsInstallError.valueOf(currentError);
             }
             boolean webServerRunning = savedInstanceState.getBoolean(STATE_WEB_SERVER_RUNNING);
-            this.notifyWebServerRunning(webServerRunning);
+            notifyWebServerRunning(webServerRunning);
         }
         // Return inflated view
         return view;
@@ -352,9 +352,9 @@ public class HomeFragment extends Fragment {
         if (mWebServerRunning) {
             WebServerUtils.stopWebServer();
         } else {
-            WebServerUtils.startWebServer(this.getContext());
+            WebServerUtils.startWebServer(getContext());
         }
-        this.notifyWebServerRunning(!mWebServerRunning);
+        notifyWebServerRunning(!mWebServerRunning);
     }
 
     /**

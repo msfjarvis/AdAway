@@ -47,17 +47,17 @@ import androidx.lifecycle.LiveData;
 public class BlackListFragment extends AbstractListFragment {
     @Override
     protected LiveData<List<HostListItem>> getData() {
-        return this.mViewModel.getBlackListItems();
+        return mViewModel.getBlackListItems();
     }
 
     @Override
     protected void addItem() {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_black_dialog, null);
         EditText inputEditText = view.findViewById(R.id.list_dialog_hostname);
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(R.string.list_add_dialog_black)
                 .setView(view)
@@ -71,7 +71,7 @@ public class BlackListFragment extends AbstractListFragment {
                             String hostname = inputEditText.getText().toString();
                             if (RegexUtils.isValidHostname(hostname)) {
                                 // Insert host to black list
-                                this.mViewModel.addListItem(ListType.BLACK_LIST, hostname, null);
+                                mViewModel.addListItem(ListType.BLACK_LIST, hostname, null);
                             }
                         })
                 .setNegativeButton(
@@ -90,7 +90,7 @@ public class BlackListFragment extends AbstractListFragment {
     @Override
     protected void editItem(HostListItem item) {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_black_dialog, null);
         // Set hostname
         EditText inputEditText = view.findViewById(R.id.list_dialog_hostname);
@@ -99,7 +99,7 @@ public class BlackListFragment extends AbstractListFragment {
         Editable inputEditContent = inputEditText.getText();
         inputEditText.setSelection(inputEditContent.length());
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(R.string.list_edit_dialog_black)
                 .setView(view)
@@ -113,7 +113,7 @@ public class BlackListFragment extends AbstractListFragment {
                             String hostname = inputEditText.getText().toString();
                             if (RegexUtils.isValidHostname(hostname)) {
                                 // Update list item
-                                this.mViewModel.updateListItem(item, hostname, null);
+                                mViewModel.updateListItem(item, hostname, null);
                             }
                         })
                 .setNegativeButton(
