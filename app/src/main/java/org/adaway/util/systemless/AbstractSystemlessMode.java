@@ -37,7 +37,7 @@ public abstract class AbstractSystemlessMode {
             // Start shell
             shell = Shell.startShell();
             // Check if enabled
-            return this.isEnabled(context, shell);
+            return isEnabled(context, shell);
         } catch (Exception exception) {
             Log.e(Constants.TAG, "Error while checking if systemless mode is installed.", exception);
             // Consider systemless mode is not installed if script could not be checked

@@ -44,17 +44,17 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
 
     public TcpdumpLogViewModel(@NonNull Application application) {
         super(application);
-        this.hostListItemDao = AppDatabase.getInstance(this.getApplication()).hostsListItemDao();
-        this.logEntries = new MutableLiveData<>();
-        this.sort = LogEntrySort.TOP_LEVEL_DOMAIN;
+        hostListItemDao = AppDatabase.getInstance(getApplication()).hostsListItemDao();
+        logEntries = new MutableLiveData<>();
+        sort = LogEntrySort.TOP_LEVEL_DOMAIN;
     }
 
     public LiveData<List<LogEntry>> getLogEntries() {
-        return this.logEntries;
+        return logEntries;
     }
 
     public void toggleSort() {
-        this.sortDnsRequests(this.sort == LogEntrySort.ALPHABETICAL ?
+        sortDnsRequests(sort == LogEntrySort.ALPHABETICAL ?
                 LogEntrySort.TOP_LEVEL_DOMAIN :
                 LogEntrySort.ALPHABETICAL
         );
@@ -64,9 +64,9 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
         AppExecutors.getInstance().diskIO().execute(
                 () -> {
                     // Get tcpdump logs
-                    List<String> logs = TcpdumpUtils.getLogs(this.getApplication());
+                    List<String> logs = TcpdumpUtils.getLogs(getApplication());
                     // Create lookup table of host list item by host name
-                    Map<String, HostListItem> hosts = Stream.of(this.hostListItemDao.getAll())
+                    Map<String, HostListItem> hosts = Stream.of(hostListItemDao.getAll())
                             .collect(Collectors.toMap(HostListItem::getHost));
                     // Create log entry collection
                     List<LogEntry> logItems = Stream.of(logs)
@@ -78,10 +78,10 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
                                 }
                                 return new LogEntry(log, type);
                             })
-                            .sorted(this.sort.comparator())
+                            .sorted(sort.comparator())
                             .collect(Collectors.toList());
                     // Post result
-                    this.logEntries.postValue(logItems);
+                    logEntries.postValue(logItems);
                 }
         );
     }
@@ -94,7 +94,7 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
         item.setRedirection(redirection);
         item.setEnabled(true);
         // Insert host list item
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostListItemDao.insert(item));
+        AppExecutors.getInstance().diskIO().execute(() -> hostListItemDao.insert(item));
         // Update log entries
         updateLogEntryType(host, type);
     }
@@ -104,7 +104,7 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
         HostListItem item = new HostListItem();
         item.setHost(host);
         // Insert host list item
-        AppExecutors.getInstance().diskIO().execute(() -> this.hostListItemDao.delete(item));
+        AppExecutors.getInstance().diskIO().execute(() -> hostListItemDao.delete(item));
         // Update log entries
         updateLogEntryType(host, null);
 
@@ -112,7 +112,7 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
 
     private void updateLogEntryType(@NonNull String host, ListType type) {
         // Get current values
-        List<LogEntry> entries = this.logEntries.getValue();
+        List<LogEntry> entries = logEntries.getValue();
         if (entries == null) {
             return;
         }
@@ -121,23 +121,23 @@ public class TcpdumpLogViewModel extends AndroidViewModel {
                 .map(entry -> entry.getHost().equals(host) ? new LogEntry(host, type) : entry)
                 .collect(Collectors.toList());
         // Post new values
-        this.logEntries.postValue(updatedEntries);
+        logEntries.postValue(updatedEntries);
     }
 
     private void sortDnsRequests(LogEntrySort sort) {
         // Save current sort
         this.sort = sort;
         // Apply sort to values
-        List<LogEntry> entries = this.logEntries.getValue();
+        List<LogEntry> entries = logEntries.getValue();
         if (entries != null) {
             List<LogEntry> sortedEntries = new ArrayList<>(entries);
-            Collections.sort(sortedEntries, this.sort.comparator());
-            this.logEntries.postValue(sortedEntries);
+            Collections.sort(sortedEntries, sort.comparator());
+            logEntries.postValue(sortedEntries);
         }
         // Notify user
         Toast.makeText(
-                this.getApplication(),
-                this.sort.getName(),
+                getApplication(),
+                sort.getName(),
                 Toast.LENGTH_SHORT
         ).show();
     }
