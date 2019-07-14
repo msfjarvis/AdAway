@@ -68,6 +68,6 @@ public class AdAwayApplication extends Application {
      * @return The common hosts install model for the whole application.
      */
     public HostsInstallModel getHostsInstallModel() {
-        return this.mHostsInstallModel;
+        return mHostsInstallModel;
     }
 }
