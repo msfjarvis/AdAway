@@ -69,7 +69,7 @@ android {
 ext {
     appcompat = '1.1.0-rc01'
     constraint_layout = '2.0.0-beta2'
-    lifecycle = '2.2.0-alpha03'
+    lifecycle = '2.2.0-alpha04'
     material = '1.1.0-alpha09'
     room = '2.2.0-alpha02'
     support = '1.0.0'
