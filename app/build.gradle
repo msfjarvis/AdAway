@@ -70,7 +70,7 @@ ext {
     appcompat = '1.1.0'
     constraint_layout = '2.0.0-beta2'
     lifecycle = '2.2.0-alpha04'
-    material = '1.1.0-alpha09'
+    material = '1.1.0-alpha10'
     room = '2.2.0-rc01'
     support = '1.0.0'
     work = '1.0.1'
