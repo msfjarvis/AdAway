@@ -20,6 +20,13 @@ allprojects {
     }
 }
 
+tasks {
+    wrapper {
+        gradleVersion = "5.6.2"
+        distributionType = Wrapper.DistributionType.ALL
+    }
+}
+
 sonarqube {
     properties {
         // Root project information
