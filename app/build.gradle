@@ -5,6 +5,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
     defaultConfig {
+        resConfigs 'en'
         minSdkVersion 26
         targetSdkVersion 26
         versionCode 40300   // Read 4.xx.yy to match version name
