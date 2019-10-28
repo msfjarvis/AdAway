@@ -112,6 +112,6 @@ dependencies {
     releaseImplementation project(':sentrystub')
     debugImplementation 'io.sentry:sentry-android:1.7.28'
     implementation 'org.slf4j:slf4j-nop:2.0.0-alpha1'
-    testImplementation 'junit:junit:4.13-beta-3'
+    testImplementation 'junit:junit:4.13-rc-1'
     testImplementation 'org.json:json:20190722'
 }
