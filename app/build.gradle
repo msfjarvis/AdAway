@@ -73,7 +73,7 @@ ext {
     constraint_layout = '2.0.0-beta4'
     lifecycle = '2.2.0'
     material = '1.2.0-alpha04'
-    room = '2.2.3'
+    room = '2.2.4'
     support = '1.0.0'
     work = '2.3.1'
     nav_version = '2.1.0-alpha05'
