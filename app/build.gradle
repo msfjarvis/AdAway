@@ -75,7 +75,7 @@ ext {
     material = '1.2.0-alpha05'
     room = '2.2.4'
     support = '1.0.0'
-    work = '2.3.3'
+    work = '2.3.4'
     nav_version = '2.1.0-alpha05'
 }
 
