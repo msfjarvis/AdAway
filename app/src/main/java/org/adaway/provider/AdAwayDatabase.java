@@ -83,14 +83,8 @@ public class AdAwayDatabase extends SQLiteOpenHelper {
                 + "(url, last_modified_local, last_modified_online, enabled) VALUES (?, ?, ?, ?)";
         insertStmt = db.compileStatement(insertHostsSources);
 
-        // https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-        insertHostsSource(insertStmt, "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts");
-
-        // https://pgl.yoyo.org/adservers/
-        insertHostsSource(insertStmt, "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext");
-
-        // AdAway's own mobile hosts
-        insertHostsSource(insertStmt, "https://adaway.org/hosts.txt");
+        // Harsh Shandilya's hosts file
+        insertHostsSource(insertStmt, "https://dl.msfjarvis.dev/adblock/hosts");
     }
 
     @Override
