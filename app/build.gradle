@@ -103,7 +103,7 @@ dependencies {
     implementation "com.google.android.material:material:${material}"
 
     // Miscellaneous
-    api 'com.google.guava:guava:28.2-android'
+    api 'com.google.guava:guava:29.0-android'
     implementation 'com.annimon:stream:1.2.1'
     implementation 'com.google.android:flexbox:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
