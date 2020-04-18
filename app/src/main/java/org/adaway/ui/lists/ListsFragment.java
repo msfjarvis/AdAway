@@ -81,7 +81,7 @@ public class ListsFragment extends Fragment {
      */
     private boolean checkPermission(String permission) {
         // Get application context
-        Context context = this.getContext();
+        Context context = getContext();
         if (context == null) {
             // Return permission failed as no context to check
             return false;
@@ -89,7 +89,7 @@ public class ListsFragment extends Fragment {
         int permissionCheck = ContextCompat.checkSelfPermission(context, permission);
         if (permissionCheck != PERMISSION_GRANTED) {
             // Request write external storage permission
-            this.requestPermissions(
+            requestPermissions(
                     new String[]{permission},
                     REQUEST_CODE_WRITE_STORAGE_PERMISSION
             );
@@ -103,9 +103,9 @@ public class ListsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Store activity
-        this.mActivity = this.getActivity();
+        mActivity = getActivity();
         // Enable option menu
-        this.setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         // Create fragment view
         View view = inflater.inflate(R.layout.lists_fragment, container, false);
         /*
@@ -126,7 +126,7 @@ public class ListsFragment extends Fragment {
         // Get view pager
         final ViewPager viewPager = view.findViewById(R.id.lists_view_pager);
         // Create pager adapter
-        final ListsFragmentPagerAdapter pagerAdapter = new ListsFragmentPagerAdapter(this.getActivity(), this.getFragmentManager());
+        final ListsFragmentPagerAdapter pagerAdapter = new ListsFragmentPagerAdapter(getActivity(), getFragmentManager());
         // Set view pager adapter
         viewPager.setAdapter(pagerAdapter);
         // Get navigation view
@@ -187,7 +187,7 @@ public class ListsFragment extends Fragment {
             Uri backupUri = data.getData();
             Log.d(Constants.TAG, "Backup URI: " + backupUri.toString());
             // Import from backup
-            ImportExportHelper.importFromBackup(this.getContext(), backupUri);
+            ImportExportHelper.importFromBackup(getContext(), backupUri);
         }
     }
 
@@ -272,6 +272,6 @@ public class ListsFragment extends Fragment {
      * Exports to a user backup.
      */
     private void exportToBackup() {
-        ImportExportHelper.exportToBackup(this.mActivity);
+        ImportExportHelper.exportToBackup(mActivity);
     }
 }
