@@ -56,6 +56,6 @@ class LogEntry implements Comparable<LogEntry> {
 
     @Override
     public int compareTo(@NonNull LogEntry o) {
-        return this.host.compareTo(o.host);
+        return host.compareTo(o.host);
     }
 }

@@ -67,14 +67,14 @@ class ListsFragmentPagerAdapter extends FragmentStatePagerAdapter {
      * Ensure action mode is cancelled.
      */
     void ensureActionModeCanceled() {
-        if (this.blacklistFragment != null) {
-            this.blacklistFragment.ensureActionModeCanceled();
+        if (blacklistFragment != null) {
+            blacklistFragment.ensureActionModeCanceled();
         }
-        if (this.whitelistFragment != null) {
-            this.whitelistFragment.ensureActionModeCanceled();
+        if (whitelistFragment != null) {
+            whitelistFragment.ensureActionModeCanceled();
         }
-        if (this.redirectionListFragment != null) {
-            this.redirectionListFragment.ensureActionModeCanceled();
+        if (redirectionListFragment != null) {
+            redirectionListFragment.ensureActionModeCanceled();
         }
     }
 
@@ -86,18 +86,18 @@ class ListsFragmentPagerAdapter extends FragmentStatePagerAdapter {
     void addItem(int position) {
         switch (position) {
             case BLACKLIST_FRAGMENT_INDEX:
-                if (this.blacklistFragment != null) {
-                    this.blacklistFragment.addItem();
+                if (blacklistFragment != null) {
+                    blacklistFragment.addItem();
                 }
                 break;
             case WHITELIST_FRAGMENT_INDEX:
-                if (this.whitelistFragment != null) {
-                    this.whitelistFragment.addItem();
+                if (whitelistFragment != null) {
+                    whitelistFragment.addItem();
                 }
                 break;
             case REDIRECTION_FRAGMENT_INDEX:
-                if (this.redirectionListFragment != null) {
-                    this.redirectionListFragment.addItem();
+                if (redirectionListFragment != null) {
+                    redirectionListFragment.addItem();
                 }
                 break;
         }
@@ -123,11 +123,11 @@ class ListsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         // Check fragment position
         switch (position) {
             case BLACKLIST_FRAGMENT_INDEX:
-                return this.activity.getString(R.string.lists_tab_blacklist);
+                return activity.getString(R.string.lists_tab_blacklist);
             case WHITELIST_FRAGMENT_INDEX:
-                return this.activity.getString(R.string.lists_tab_whitelist);
+                return activity.getString(R.string.lists_tab_whitelist);
             case REDIRECTION_FRAGMENT_INDEX:
-                return this.activity.getString(R.string.lists_tab_redirection_list);
+                return activity.getString(R.string.lists_tab_redirection_list);
             default:
                 return null;
         }
@@ -140,13 +140,13 @@ class ListsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         AbstractListFragment fragment = (AbstractListFragment) super.instantiateItem(container, position);
         switch (position) {
             case BLACKLIST_FRAGMENT_INDEX:
-                this.blacklistFragment = fragment;
+                blacklistFragment = fragment;
                 break;
             case WHITELIST_FRAGMENT_INDEX:
-                this.whitelistFragment = fragment;
+                whitelistFragment = fragment;
                 break;
             case REDIRECTION_FRAGMENT_INDEX:
-                this.redirectionListFragment = fragment;
+                redirectionListFragment = fragment;
                 break;
         }
         return fragment;

@@ -51,18 +51,18 @@ public class RedirectionListFragment extends AbstractListFragment {
 
     @Override
     protected LiveData<List<HostListItem>> getData() {
-        return this.mViewModel.getRedirectionListItems();
+        return mViewModel.getRedirectionListItems();
     }
 
     @Override
     protected void addItem() {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_redirect_dialog, null);
         EditText hostnameEditText = view.findViewById(R.id.list_dialog_hostname);
         EditText ipEditText = view.findViewById(R.id.list_dialog_ip);
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(R.string.list_add_dialog_redirect)
                 .setView(view)
@@ -77,7 +77,7 @@ public class RedirectionListFragment extends AbstractListFragment {
                             String ip = ipEditText.getText().toString();
                             if (RegexUtils.isValidHostname(hostname) && RegexUtils.isValidIP(ip)) {
                                 // Insert host to redirection list
-                                this.mViewModel.addListItem(ListType.REDIRECTION_LIST, hostname, ip);
+                                mViewModel.addListItem(ListType.REDIRECTION_LIST, hostname, ip);
                             }
                         }
                 )
@@ -105,7 +105,7 @@ public class RedirectionListFragment extends AbstractListFragment {
     @Override
     protected void editItem(HostListItem item) {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_redirect_dialog, null);
         // Set hostname and IP
         EditText hostnameEditText = view.findViewById(R.id.list_dialog_hostname);
@@ -116,7 +116,7 @@ public class RedirectionListFragment extends AbstractListFragment {
         Editable hostnameEditContent = hostnameEditText.getText();
         hostnameEditText.setSelection(hostnameEditContent.length());
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(getString(R.string.list_edit_dialog_redirect))
                 .setView(view)
@@ -130,7 +130,7 @@ public class RedirectionListFragment extends AbstractListFragment {
                             String ip = ipEditText.getText().toString();
                             if (RegexUtils.isValidHostname(hostname) && RegexUtils.isValidIP(ip)) {
                                 // Update list item
-                                this.mViewModel.updateListItem(item, hostname, ip);
+                                mViewModel.updateListItem(item, hostname, ip);
                             }
                         }
                 )

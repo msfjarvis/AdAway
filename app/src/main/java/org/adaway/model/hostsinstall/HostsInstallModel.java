@@ -109,8 +109,8 @@ public class HostsInstallModel extends Observable {
      */
     public HostsInstallModel(Context context) {
         this.context = context;
-        this.state = "";
-        this.detailedState = "";
+        state = "";
+        detailedState = "";
     }
 
     /**
@@ -121,7 +121,7 @@ public class HostsInstallModel extends Observable {
     public void createSymlink() throws HostsInstallException {
         try {
             // Check installation according apply method
-            String applyMethod = PreferenceHelper.getApplyMethod(this.context);
+            String applyMethod = PreferenceHelper.getApplyMethod(context);
             switch (applyMethod) {
                 case APPLY_TO_DATA_DATA:
                     ApplyUtils.createSymlink(Constants.ANDROID_DATA_DATA_HOSTS);
@@ -130,7 +130,7 @@ public class HostsInstallModel extends Observable {
                     ApplyUtils.createSymlink(Constants.ANDROID_DATA_HOSTS);
                     break;
                 case APPLY_TO_CUSTOM_TARGET:
-                    ApplyUtils.createSymlink(PreferenceHelper.getCustomTarget(this.context));
+                    ApplyUtils.createSymlink(PreferenceHelper.getCustomTarget(context));
                     break;
                 default:
                     throw new IllegalStateException("The apply method " + applyMethod + " is not supported.");
@@ -146,7 +146,7 @@ public class HostsInstallModel extends Observable {
      * @return The model state.
      */
     public String getState() {
-        return this.state;
+        return state;
     }
 
     /**
@@ -155,7 +155,7 @@ public class HostsInstallModel extends Observable {
      * @return The model detailed state.
      */
     public String getDetailedState() {
-        return this.detailedState;
+        return detailedState;
     }
 
     /**
@@ -164,9 +164,9 @@ public class HostsInstallModel extends Observable {
      * @throws HostsInstallException If the hosts sources could not be checked.
      */
     public boolean checkForUpdate() throws HostsInstallException {
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         // Check current connection
-        if (!Utils.isAndroidOnline(this.context)) {
+        if (!Utils.isAndroidOnline(context)) {
             throw new HostsInstallException(NO_CONNECTION, "Failed to download hosts sources files: not connected.");
         }
         // Initialize update status
@@ -179,31 +179,31 @@ public class HostsInstallModel extends Observable {
             return false;
         }
         // Update state
-        this.setStateAndDetails(R.string.status_checking, R.string.status_checking);
+        setStateAndDetails(R.string.status_checking, R.string.status_checking);
         // Check each source
         for (HostsSource source : sources) {
             // Get URL and lastModified from db
             String sourceUrl = source.getUrl();
             Date lastModifiedLocal = source.getLastLocalModification();
             // Update state
-            this.setStateAndDetails(R.string.status_checking, sourceUrl);
+            setStateAndDetails(R.string.status_checking, sourceUrl);
             // Get hosts source last update
-            Date lastModifiedOnline = this.getHostsSourceLastUpdate(sourceUrl);
+            Date lastModifiedOnline = getHostsSourceLastUpdate(sourceUrl);
             // Some help with debug here
             Log.d(Constants.TAG, "lastModifiedLocal: "
                     + (lastModifiedLocal == null ? "not defined" : lastModifiedLocal)
-                    + " (" + DateUtils.dateToString(this.context, lastModifiedLocal) + ")"
+                    + " (" + DateUtils.dateToString(context, lastModifiedLocal) + ")"
             );
             Log.d(Constants.TAG, "lastModifiedOnline: "
                     + (lastModifiedOnline == null ? "not defined" : lastModifiedOnline)
-                    + " (" + DateUtils.dateToString(this.context, lastModifiedOnline) + ")"
+                    + " (" + DateUtils.dateToString(context, lastModifiedOnline) + ")"
             );
             // Save last modified online
             hostsSourceDao.updateOnlineModificationDate(sourceUrl, lastModifiedOnline);
             // Check if last modified online retrieved
             if (lastModifiedOnline != null) {
                 anyHostsSourceVerified = true;
-                // Check if update is available for this source and source enabled
+                // Check if update is available for source and source enabled
                 if (source.isEnabled() && (lastModifiedLocal == null || lastModifiedOnline.after(lastModifiedLocal))) {
                     updateAvailable = true;
                 }
@@ -215,9 +215,9 @@ public class HostsInstallModel extends Observable {
         }
         // Check if update is available
         if (updateAvailable) {
-            this.setStateAndDetails(R.string.status_update_available, R.string.status_update_available_subtitle);
+            setStateAndDetails(R.string.status_update_available, R.string.status_update_available_subtitle);
         } else {
-            this.setStateAndDetails(R.string.status_enabled, R.string.status_enabled_subtitle);
+            setStateAndDetails(R.string.status_enabled, R.string.status_enabled_subtitle);
         }
         Log.d(Constants.TAG, "Update check result: " + updateAvailable);
         return updateAvailable;
@@ -267,18 +267,18 @@ public class HostsInstallModel extends Observable {
      * @throws HostsInstallException If the hosts sources could not be downloaded.
      */
     public void retrieveHostsSources() throws HostsInstallException {
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         // Check connection status
-        if (!Utils.isAndroidOnline(this.context)) {
+        if (!Utils.isAndroidOnline(context)) {
             throw new HostsInstallException(NO_CONNECTION, "Failed to download hosts sources files: not connected.");
         }
         // Update state to downloading
-        this.setStateAndDetails(R.string.download_dialog, "");
+        setStateAndDetails(R.string.download_dialog, "");
         // Initialize copy counters
         int numberOfCopies = 0;
         int numberOfFailedCopies = 0;
         // Open local private file and get cursor to enabled hosts sources
-        try (FileOutputStream out = this.context.openFileOutput(Constants.DOWNLOADED_HOSTS_FILENAME, Context.MODE_PRIVATE)) {
+        try (FileOutputStream out = context.openFileOutput(Constants.DOWNLOADED_HOSTS_FILENAME, Context.MODE_PRIVATE)) {
             // Get each hosts source
             for (HostsSource hostsSource : hostsSourceDao.getEnabled()) {
                 // Increment number of copy
@@ -289,10 +289,10 @@ public class HostsInstallModel extends Observable {
                 String protocol = new URL(url).getProtocol();
                 switch (protocol) {
                     case "https":
-                        copySuccess = this.downloadHostSource(hostsSource, out);
+                        copySuccess = downloadHostSource(hostsSource, out);
                         break;
                     case "file":
-                        copySuccess = this.copyHostSourceFile(hostsSource, out);
+                        copySuccess = copyHostSourceFile(hostsSource, out);
                         break;
                     default:
                         Log.w(Constants.TAG, "Hosts source protocol " + protocol + " is not supported.");
@@ -318,12 +318,12 @@ public class HostsInstallModel extends Observable {
      */
     @NonNull
     private OkHttpClient getHttpClient() {
-        if (this.httpClient == null) {
-            this.httpClient = new OkHttpClient.Builder()
+        if (httpClient == null) {
+            httpClient = new OkHttpClient.Builder()
                     .cache(new Cache(context.getCacheDir(), 100 * 1024 * 1024))
                     .build();
         }
-        return this.httpClient;
+        return httpClient;
     }
 
     /**
@@ -334,14 +334,14 @@ public class HostsInstallModel extends Observable {
      * @return {@code true} if the hosts was successfully downloaded, {@code false} otherwise.
      */
     private boolean downloadHostSource(HostsSource hostsSource, FileOutputStream out) {
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         // Get hosts file URL
         String hostsFileUrl = hostsSource.getUrl();
         Log.v(Constants.TAG, "Downloading hosts file: " + hostsFileUrl);
         // Set state to downloading hosts source
-        this.setStateAndDetails(R.string.download_dialog, hostsFileUrl);
+        setStateAndDetails(R.string.download_dialog, hostsFileUrl);
         // Get HTTP client
-        OkHttpClient httpClient = this.getHttpClient();
+        OkHttpClient httpClient = getHttpClient();
         // Create request
         Request request = new Request.Builder()
                 .url(hostsFileUrl)
@@ -350,7 +350,7 @@ public class HostsInstallModel extends Observable {
         try (Response response = httpClient.newCall(request).execute();
              InputStream inputStream = response.body().byteStream()) {
             // Copy hosts content to private file
-            this.copyHostsContent(inputStream, out);
+            copyHostsContent(inputStream, out);
             // Save last modified online for later use
             String lastModifiedHeader = response.header("Last-Modified");
             if (lastModifiedHeader != null) {
@@ -381,12 +381,12 @@ public class HostsInstallModel extends Observable {
      * @return {@code true} if the hosts was successfully downloaded, {@code false} otherwise.
      */
     private boolean copyHostSourceFile(HostsSource hostsSource, FileOutputStream out) {
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         // Get hosts file URL
         String hostsFileUrl = hostsSource.getUrl();
         Log.v(Constants.TAG, "Copying hosts source file: " + hostsFileUrl);
         // Set state to downloading hosts source
-        this.setStateAndDetails(R.string.download_dialog, hostsFileUrl);
+        setStateAndDetails(R.string.download_dialog, hostsFileUrl);
         // Declare last modification date
         Date lastModified = null;
         try {
@@ -439,20 +439,20 @@ public class HostsInstallModel extends Observable {
         Shell shell = null;
         try {
             shell = Shell.startRootShell();
-            this.setStateAndDetails(R.string.apply_dialog, R.string.apply_dialog_hosts);
-            if (!this.checkHostsFileSymlink(shell)) {
+            setStateAndDetails(R.string.apply_dialog, R.string.apply_dialog_hosts);
+            if (!checkHostsFileSymlink(shell)) {
                 throw new HostsInstallException(SYMLINK_MISSING, "The symlink to the hosts file target is missing.");
             }
-            this.createNewHostsFile();
-            this.deleteHostsSources();
-            this.copyNewHostsFile(shell);
-            this.deleteNewHostsFile();
-            this.setStateAndDetails(R.string.apply_dialog, R.string.apply_dialog_apply);
+            createNewHostsFile();
+            deleteHostsSources();
+            copyNewHostsFile(shell);
+            deleteNewHostsFile();
+            setStateAndDetails(R.string.apply_dialog, R.string.apply_dialog_apply);
             if (!checkInstalledHostsFile()) {
                 throw new HostsInstallException(APPLY_FAIL, "Failed to apply new hosts file.");
             }
-            this.markHostsSourcesAsInstalled();
-            this.setStateAndDetails(R.string.status_enabled, R.string.status_enabled_subtitle);
+            markHostsSourcesAsInstalled();
+            setStateAndDetails(R.string.status_enabled, R.string.status_enabled_subtitle);
         } catch (RootAccessDeniedException exception) {
             throw new HostsInstallException(ROOT_ACCESS_DENIED, "Root access denied", exception);
         } catch (IOException exception) {
@@ -470,12 +470,12 @@ public class HostsInstallModel extends Observable {
 
     private void deleteNewHostsFile() {
         // delete generated hosts file from private storage
-        this.context.deleteFile(Constants.HOSTS_FILENAME);
+        context.deleteFile(Constants.HOSTS_FILENAME);
     }
 
     private void deleteHostsSources() {
         // delete downloaded hosts file from private storage
-        this.context.deleteFile(Constants.DOWNLOADED_HOSTS_FILENAME);
+        context.deleteFile(Constants.DOWNLOADED_HOSTS_FILENAME);
     }
 
     /**
@@ -485,7 +485,7 @@ public class HostsInstallModel extends Observable {
      */
     private boolean checkInstalledHostsFile() {
         // Check installation according apply method
-        String applyMethod = PreferenceHelper.getApplyMethod(this.context);
+        String applyMethod = PreferenceHelper.getApplyMethod(context);
         switch (applyMethod) {
             case APPLY_TO_SYSTEM:
                 /* /system/etc/hosts */
@@ -498,7 +498,7 @@ public class HostsInstallModel extends Observable {
                 return ApplyUtils.isHostsFileCorrect(Constants.ANDROID_DATA_HOSTS);
             case APPLY_TO_CUSTOM_TARGET:
                 /* custom target */
-                String customTarget = PreferenceHelper.getCustomTarget(this.context);
+                String customTarget = PreferenceHelper.getCustomTarget(context);
                 return ApplyUtils.isHostsFileCorrect(customTarget);
             default:
                 throw new IllegalStateException("The apply method " + applyMethod + " is not supported.");
@@ -513,7 +513,7 @@ public class HostsInstallModel extends Observable {
      */
     private boolean checkHostsFileSymlink(Shell shell) {
         // Check installation according apply method
-        String applyMethod = PreferenceHelper.getApplyMethod(this.context);
+        String applyMethod = PreferenceHelper.getApplyMethod(context);
         switch (applyMethod) {
             case APPLY_TO_SYSTEM:
                 // System hosts file used, no need of symlink
@@ -526,7 +526,7 @@ public class HostsInstallModel extends Observable {
                 return ApplyUtils.isSymlinkCorrect(Constants.ANDROID_DATA_HOSTS, shell);
             case APPLY_TO_CUSTOM_TARGET:
                 // custom target
-                String customTarget = PreferenceHelper.getCustomTarget(this.context);
+                String customTarget = PreferenceHelper.getCustomTarget(context);
                 return ApplyUtils.isSymlinkCorrect(customTarget, shell);
             default:
                 throw new IllegalStateException("The apply method " + applyMethod + " is not supported.");
@@ -536,20 +536,20 @@ public class HostsInstallModel extends Observable {
     private void copyNewHostsFile(Shell rootShell) throws HostsInstallException {
         // copy build hosts file with RootTools, based on target from preferences
         try {
-            String applyMethod = PreferenceHelper.getApplyMethod(this.context);
+            String applyMethod = PreferenceHelper.getApplyMethod(context);
             switch (applyMethod) {
                 case APPLY_TO_SYSTEM:
-                    ApplyUtils.copyHostsFile(this.context, Constants.ANDROID_SYSTEM_ETC_HOSTS, rootShell);
+                    ApplyUtils.copyHostsFile(context, Constants.ANDROID_SYSTEM_ETC_HOSTS, rootShell);
                     break;
                 case APPLY_TO_DATA_DATA:
-                    ApplyUtils.copyHostsFile(this.context, Constants.ANDROID_DATA_DATA_HOSTS, rootShell);
+                    ApplyUtils.copyHostsFile(context, Constants.ANDROID_DATA_DATA_HOSTS, rootShell);
                     break;
                 case APPLY_TO_DATA:
-                    ApplyUtils.copyHostsFile(this.context, Constants.ANDROID_DATA_HOSTS, rootShell);
+                    ApplyUtils.copyHostsFile(context, Constants.ANDROID_DATA_HOSTS, rootShell);
                     break;
                 case APPLY_TO_CUSTOM_TARGET:
-                    String customTarget = PreferenceHelper.getCustomTarget(this.context);
-                    ApplyUtils.copyHostsFile(this.context, customTarget, rootShell);
+                    String customTarget = PreferenceHelper.getCustomTarget(context);
+                    ApplyUtils.copyHostsFile(context, customTarget, rootShell);
                     break;
                 default:
                     throw new IllegalStateException("The apply method " + applyMethod + " is not supported.");
@@ -569,12 +569,12 @@ public class HostsInstallModel extends Observable {
      * @throws HostsInstallException If the new hosts file could not be created.
      */
     private void createNewHostsFile() throws HostsInstallException {
-        try (BufferedOutputStream outputStream = new BufferedOutputStream(this.context.openFileOutput(Constants.HOSTS_FILENAME,
+        try (BufferedOutputStream outputStream = new BufferedOutputStream(context.openFileOutput(Constants.HOSTS_FILENAME,
                 Context.MODE_PRIVATE))) {
-            HostsParser parser = this.parseDownloadedHosts();
-            this.writeHostsHeader(outputStream);
-            this.writeLoopbackToHosts(outputStream);
-            this.writeHosts(outputStream, parser);
+            HostsParser parser = parseDownloadedHosts();
+            writeHostsHeader(outputStream);
+            writeLoopbackToHosts(outputStream);
+            writeHosts(outputStream, parser);
         } catch (FileNotFoundException exception) {
             throw new HostsInstallException(PRIVATE_FILE_FAIL, "Private hosts file was not found.", exception);
         } catch (IOException exception) {
@@ -584,11 +584,11 @@ public class HostsInstallModel extends Observable {
 
     private HostsParser parseDownloadedHosts() throws IOException {
         // Get application context
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.context.openFileInput(Constants.DOWNLOADED_HOSTS_FILENAME)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.openFileInput(Constants.DOWNLOADED_HOSTS_FILENAME)))) {
             /* PARSE: parse hosts files to sets of host names and comments */
             // Use whitelist and/or redirection rules from hosts sources only if enabled in preferences
-            HostsParser hostsParser = new HostsParser(reader, PreferenceHelper.getWhitelistRules(this.context), PreferenceHelper.getRedirectionRules(this.context));
-            this.applyUserList(hostsParser);
+            HostsParser hostsParser = new HostsParser(reader, PreferenceHelper.getWhitelistRules(context), PreferenceHelper.getRedirectionRules(context));
+            applyUserList(hostsParser);
             return hostsParser;
         }
     }
@@ -616,11 +616,11 @@ public class HostsInstallModel extends Observable {
     }
 
     private void writeHosts(BufferedOutputStream outputStream, HostsParser parser) throws IOException {
-        String redirectionIpv4 = PreferenceHelper.getRedirectionIpv4(this.context);
-        String redirectionIpv6 = PreferenceHelper.getRedirectionIpv6(this.context);
+        String redirectionIpv4 = PreferenceHelper.getRedirectionIpv4(context);
+        String redirectionIpv6 = PreferenceHelper.getRedirectionIpv6(context);
         // write hostnames
         String line;
-        boolean enableIpv6 = PreferenceHelper.getEnableIpv6(this.context);
+        boolean enableIpv6 = PreferenceHelper.getEnableIpv6(context);
         for (String hostname : parser.getBlacklist()) {
             line = Constants.LINE_SEPARATOR + redirectionIpv4 + " " + hostname;
             outputStream.write(line.getBytes());
@@ -656,7 +656,7 @@ public class HostsInstallModel extends Observable {
     }
 
     private void writeHostsHeader(BufferedOutputStream outputStream) throws IOException {
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         // build current timestamp for header
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date now = new Date();
@@ -684,17 +684,17 @@ public class HostsInstallModel extends Observable {
      */
     public void revert() throws HostsInstallException {
         // Update status
-        this.setStateAndDetails(R.string.status_reverting, R.string.status_reverting_subtitle);
+        setStateAndDetails(R.string.status_reverting, R.string.status_reverting_subtitle);
         // Create root shell
         Shell shell = null;
         try {
             shell = Shell.startRootShell();
             // Revert hosts file
-            this.revertHostFile(shell);
-            this.markHostsSourcesAsUninstalled();
-            this.setStateAndDetails(R.string.status_disabled, R.string.status_disabled_subtitle);
+            revertHostFile(shell);
+            markHostsSourcesAsUninstalled();
+            setStateAndDetails(R.string.status_disabled, R.string.status_disabled_subtitle);
         } catch (IOException exception) {
-            this.setStateAndDetails(R.string.status_enabled, R.string.revert_problem);
+            setStateAndDetails(R.string.status_enabled, R.string.revert_problem);
             throw new HostsInstallException(REVERT_FAIL, "Unable to revert hosts file.", exception);
         } finally {
             // Close shell
@@ -723,7 +723,7 @@ public class HostsInstallModel extends Observable {
                     + Constants.LOCALHOST_HOSTNAME;
             fos.write(localhost.getBytes());
             // Get hosts file target based on preferences
-            String applyMethod = PreferenceHelper.getApplyMethod(this.context);
+            String applyMethod = PreferenceHelper.getApplyMethod(context);
             String target;
             switch (applyMethod) {
                 case APPLY_TO_SYSTEM:
@@ -736,15 +736,15 @@ public class HostsInstallModel extends Observable {
                     target = Constants.ANDROID_DATA_HOSTS;
                     break;
                 case APPLY_TO_CUSTOM_TARGET:
-                    target = PreferenceHelper.getCustomTarget(this.context);
+                    target = PreferenceHelper.getCustomTarget(context);
                     break;
                 default:
                     throw new IllegalStateException("The apply method does not match any settings: " + applyMethod + ".");
             }
             // Copy generated hosts file to target location
-            ApplyUtils.copyHostsFile(this.context, target, shell);
+            ApplyUtils.copyHostsFile(context, target, shell);
             // Delete generated hosts file after applying it
-            this.context.deleteFile(Constants.HOSTS_FILENAME);
+            context.deleteFile(Constants.HOSTS_FILENAME);
         } catch (Exception exception) {
             throw new IOException("Unable to revert hosts file.", exception);
         }
@@ -755,7 +755,7 @@ public class HostsInstallModel extends Observable {
      */
     private void markHostsSourcesAsInstalled() {
         // Get application context and database
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         Date now = DateTimeUtils.toDate(Instant.now());
         hostsSourceDao.updateEnabledLocalModificationDates(now);
     }
@@ -765,18 +765,18 @@ public class HostsInstallModel extends Observable {
      */
     private void markHostsSourcesAsUninstalled() {
         // Get application context and database
-        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(this.context).hostsSourceDao();
+        HostsSourceDao hostsSourceDao = AppDatabase.getInstance(context).hostsSourceDao();
         hostsSourceDao.clearLocalModificationDates();
     }
 
     private void setStateAndDetails(@StringRes int stateResId, @StringRes int detailsResId) {
-        this.setStateAndDetails(stateResId, this.context.getString(detailsResId));
+        setStateAndDetails(stateResId, context.getString(detailsResId));
     }
 
     private void setStateAndDetails(@StringRes int stateResId, String details) {
-        this.state = this.context.getString(stateResId);
-        this.detailedState = details;
-        this.setChanged();
-        this.notifyObservers();
+        state = context.getString(stateResId);
+        detailedState = details;
+        setChanged();
+        notifyObservers();
     }
 }
