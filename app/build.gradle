@@ -5,6 +5,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
+        resConfigs 'en'
         minSdkVersion 16
         targetSdkVersion 28
         ndkVersion '21.0.6113669'
