@@ -60,15 +60,15 @@ public class TcpdumpFragment extends Fragment {
         // Inflate layout
         View view = inflater.inflate(R.layout.tcpdump_fragment, container, false);
         // Get activity
-        final Activity activity = this.getActivity();
+        final Activity activity = getActivity();
         try {
             // Create root shell
-            this.mRootShell = Shell.startRootShell();
+            mRootShell = Shell.startRootShell();
             // Check if tcpdump if running
-            this.mTcpdumpRunning = TcpdumpUtils.isTcpdumpRunning(this.mRootShell);
+            mTcpdumpRunning = TcpdumpUtils.isTcpdumpRunning(mRootShell);
         } catch (Exception exception) {
             Log.e(Constants.TAG, "Unable to create root shell for tcpdump.", exception);
-            this.mTcpdumpRunning = false;
+            mTcpdumpRunning = false;
         }
         /*
          * Configure view.
@@ -76,24 +76,24 @@ public class TcpdumpFragment extends Fragment {
         // Get tcpdump enable button
         Button tcpdumpEnableButton = view.findViewById(R.id.tcpdump_enable_monitoring);
         // Set tcpdump enable button text according tcpdump running state
-        tcpdumpEnableButton.setText(this.mTcpdumpRunning ? R.string.tcpdump_disable_monitoring : R.string.tcpdump_enable_monitoring);
+        tcpdumpEnableButton.setText(mTcpdumpRunning ? R.string.tcpdump_disable_monitoring : R.string.tcpdump_enable_monitoring);
         // Bind tcpdump enable button action listener to start/stop tcpdump
         tcpdumpEnableButton.setOnClickListener(buttonView -> {
             // Check shell
-            if (this.mRootShell == null) {
+            if (mRootShell == null) {
                 return;
             }
             // Check button checked state
-            if (this.mTcpdumpRunning) {
+            if (mTcpdumpRunning) {
                 // Stop tcpdump
-                TcpdumpUtils.stopTcpdump(this.mRootShell);
+                TcpdumpUtils.stopTcpdump(mRootShell);
                 // Update tcp running status
-                this.mTcpdumpRunning = false;
+                mTcpdumpRunning = false;
                 // Update button text
                 tcpdumpEnableButton.setText(R.string.tcpdump_enable_monitoring);
-            } else if (TcpdumpUtils.startTcpdump(activity, this.mRootShell)) {
+            } else if (TcpdumpUtils.startTcpdump(activity, mRootShell)) {
                 // Update tcp running status
-                this.mTcpdumpRunning = true;
+                mTcpdumpRunning = true;
                 // Update button text
                 tcpdumpEnableButton.setText(R.string.tcpdump_disable_monitoring);
             }
@@ -102,7 +102,7 @@ public class TcpdumpFragment extends Fragment {
         Button openButton = view.findViewById(R.id.tcpdump_show_results);
         // Set open button on click listener to start tcpdump log activity
         openButton.setOnClickListener(
-                clickedView -> this.startActivity(new Intent(activity, TcpdumpLogActivity.class))
+                clickedView -> startActivity(new Intent(activity, TcpdumpLogActivity.class))
         );
         // Return created view
         return view;
@@ -112,11 +112,11 @@ public class TcpdumpFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         // Check if shell is initialized
-        if (this.mRootShell != null) {
+        if (mRootShell != null) {
             try {
                 // Close shell
-                this.mRootShell.close();
-                this.mRootShell = null;
+                mRootShell.close();
+                mRootShell = null;
             } catch (IOException exception) {
                 Log.e(Constants.TAG, "Unable to close tcpdump shell.", exception);
             }

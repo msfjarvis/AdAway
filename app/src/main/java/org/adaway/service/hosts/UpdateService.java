@@ -95,7 +95,7 @@ public final class UpdateService {
         public Result doWork() {
             Log.i(Constants.TAG, "Starting update worker");
             // Create model
-            AdAwayApplication application = (AdAwayApplication) this.getApplicationContext();
+            AdAwayApplication application = (AdAwayApplication) getApplicationContext();
             HostsInstallModel model = application.getHostsInstallModel();
             // Check for update
             boolean hasUpdate;
