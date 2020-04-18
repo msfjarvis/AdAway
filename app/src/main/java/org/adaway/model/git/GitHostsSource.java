@@ -33,7 +33,7 @@ public abstract class GitHostsSource {
 
     GitHostsSource() {
         // Define commit date format
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", US);
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", US);
     }
 
     /**

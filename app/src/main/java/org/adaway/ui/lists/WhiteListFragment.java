@@ -47,17 +47,17 @@ import androidx.lifecycle.LiveData;
 public class WhiteListFragment extends AbstractListFragment {
     @Override
     protected LiveData<List<HostListItem>> getData() {
-        return this.mViewModel.getWhiteListItems();
+        return mViewModel.getWhiteListItems();
     }
 
     @Override
     protected void addItem() {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_white_dialog, null);
         EditText inputEditText = view.findViewById(R.id.list_dialog_hostname);
         // Create dialog
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(R.string.list_add_dialog_white)
                 .setView(view)
@@ -71,7 +71,7 @@ public class WhiteListFragment extends AbstractListFragment {
                             String hostname = inputEditText.getText().toString();
                             if (RegexUtils.isValidWhitelistHostname(hostname)) {
                                 // Insert host to whitelist
-                                this.mViewModel.addListItem(ListType.WHITE_LIST, hostname, null);
+                                mViewModel.addListItem(ListType.WHITE_LIST, hostname, null);
                             }
                         }
                 )
@@ -91,7 +91,7 @@ public class WhiteListFragment extends AbstractListFragment {
     @Override
     protected void editItem(HostListItem item) {
         // Create dialog view
-        LayoutInflater factory = LayoutInflater.from(this.mActivity);
+        LayoutInflater factory = LayoutInflater.from(mActivity);
         View view = factory.inflate(R.layout.lists_white_dialog, null);
         // Set hostname
         EditText inputEditText = view.findViewById(R.id.list_dialog_hostname);
@@ -100,7 +100,7 @@ public class WhiteListFragment extends AbstractListFragment {
         Editable inputEditContent = inputEditText.getText();
         inputEditText.setSelection(inputEditContent.length());
         // Create dialog builder
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(this.mActivity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setCancelable(true)
                 .setTitle(R.string.list_edit_dialog_white)
                 .setView(view)
@@ -114,7 +114,7 @@ public class WhiteListFragment extends AbstractListFragment {
                             String hostname = inputEditText.getText().toString();
                             if (RegexUtils.isValidWhitelistHostname(hostname)) {
                                 // Update list item
-                                this.mViewModel.updateListItem(item, hostname, null);
+                                mViewModel.updateListItem(item, hostname, null);
                             }
                         }
                 )
