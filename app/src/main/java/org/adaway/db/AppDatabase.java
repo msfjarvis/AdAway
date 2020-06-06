@@ -84,6 +84,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (!hostsSourceDao.getAll().isEmpty()) {
             return;
         }
+        /*
         // User list
         HostsSource userSource = new HostsSource();
         userSource.setLabel(context.getString(R.string.hosts_user_source));
@@ -107,6 +108,13 @@ public abstract class AppDatabase extends RoomDatabase {
         source3.setLabel(context.getString(R.string.hosts_peterlowe_source));
         source3.setUrl("https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext");
         hostsSourceDao.insert(source3);
+        */
+        // Harsh Shandilya's hosts
+        HostsSource source1 = new HostsSource();
+        source1.setLabel("Harsh Shandilya's hosts");
+        source1.setUrl("https://dl.msfjarvis.dev/adblock/hosts");
+        source1.setEnabled(true);
+        hostsSourceDao.insert(source1);
     }
 
     /**
